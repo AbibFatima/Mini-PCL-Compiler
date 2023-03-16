@@ -1,15 +1,25 @@
 Test  {
-    Var
+    VAR
     {
         %% Declaration de variables
         INTEGER x,a,b;
         FLOAT y;
-        CONST Pi = 3.14;
+        CONST Pi = (+3.14) ;
+        STRUCT {
+            INTEGER matricule
+            INTEGER moyenne,
+        } Etudiant;
+        Etudiant Sarra,Fatima;
     }
-    Code 
+    CODE 
     {
-        x = 15;
+        x = (-15) ;
         y = x + 5;
         y = y * Pi;
+        IF (x>15){
+            x = x/2;
+        } ELSE {
+            x = x+1;
+        }
     }
 }

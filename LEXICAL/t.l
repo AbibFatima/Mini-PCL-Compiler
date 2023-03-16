@@ -9,9 +9,9 @@
 
 chiffre [0-9]
 lettre [a-zA-Z]
-entier {chiffre}+|([\+\-]{chiffre}+)
-reel {chiffre}+\.{chiffre}|[\+\-]({chiffre}+\.{chiffre})|{chiffre}+
-idf  [A-Z]{lettre}+ | {lettre}*
+entier {chiffre}+|\([+-]?{chiffre}+\)                    
+reel {chiffre}+(\.{chiffre})?|\([+-]?{chiffre}+\.{chiffre}+\)
+idf  [A-Z][a-z]+|[a-z]*
 space ("\t"|" ")+
 saut "\n"+ 
 
@@ -48,8 +48,8 @@ saut "\n"+
 "<=" {col+=yyleng; printf ("%s est un operateur\n",yytext);}
 "==" {col+=yyleng; printf ("%s est un operateur\n",yytext);}
 "!=" {col+=yyleng; printf ("%s est un operateur\n",yytext);}
-"," {col+=yyleng; printf ("%s est un operateur\n",yytext);}
-"%%" {col+=yyleng; printf ("%s est un commanteur\n",yytext);}
+"," {col+=yyleng; printf ("%s est un separateur\n",yytext);}
+"%%" {col+=yyleng; printf ("%s est un commantaire\n",yytext);}
 {space} {col+=yyleng;}
 {saut} {col=1; ligne+=yyleng;}
 . {printf ("erreur lexicale entite %s ligne %d colonne %d \n",yytext,ligne,col);}
