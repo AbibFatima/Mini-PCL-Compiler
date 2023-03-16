@@ -1,0 +1,15 @@
+TEST  {
+    VAR 
+    {
+        %%Declaration de variables
+        INTEGER x,a,b;
+        FLOAT y;
+        CONST PI = 3.14;
+    }
+    CODE 
+    {
+        x = 15;
+        y = x + 5;
+        y = y * PI;
+    }
+}
