@@ -10,27 +10,28 @@ Steps to make a mini PCL Compiler :
 ## Step 1 : LEXICAL ANALYSIS ( Analyse lexicale ) 
 
 Elle consiste à :
-- Déterminer toutes les entités           **we are going to focus on this part first**
-- Construire la table des symboles        **this one will be treated later on**
-
+- Déterminer toutes les entités &emsp; &emsp; &emsp;  **we are going to focus on this part first**
+- Construire la table des symboles &emsp; &emsp;       **this one will be treated later on**
 
 Les entités représentent les mots clés, les identificateurs, les constantes, espaces...
 
-1. We create a .l file that is separated in 3 parts with '%%' : 
-   -the 1st part (pré-code C): (in '%{' '%}') holds all C libraries used in this script, 
-   -the 2nd part  : les définitions des expressions réguliéres,
-   -the 3rd part : les régles de traductions,
-   -the 4th part (additional, used only in this Analysis to check if the script works correctly. We'll change its emplacement after to the .y file) : contains the MAIN function.
+
+1. We create a .l file that is separated in 3 parts with ``%%`` : 
+   * First part (pre-code C): (in ``%{ %}``) holds all C libraries used in this script, 
+   * Second part  : les définitions des expressions réguliéres (definitions of regular expressions),
+   * Third part : les régles de traductions,
+   * Fourth part (additional, used only in this Analysis to check if the script works correctly. We'll change its emplacement after to the .y file) : contains the MAIN function.
 
  
-### The First part : the libraries used are 
+### The First part : Pre-Code C
+the libraries used are 
 
 <code> #include <stdio.h> </code> : used when calling the function printf
 
 <code> #include <stdlib.h> </code> : used when calling the functions fopen and fclose in MAIN
 
-### The Second part :  Some exemples to see how "les expressions réguliéres" are written to help 
-                define "les entités lexicales" : 
+### The Second part :  Regular Expressions
+Some exemples to see how "les expressions réguliéres" are written to help define "les entités lexicales" : 
 
 <pre>
 <code>
@@ -43,8 +44,9 @@ saut "\n"+                          //saut de ligne
 </code>
 </pre>
 
-//Remarque : on définit l'espace et le saut de ligne pour faire le compte de la ligne et la colonne de l'erreur lexicale lorsqu'on la rencontre.
-//Pour cela il faut compter le nombre de saut de ligne pour retrouver la ligne de l'erreur, et le nombre d'espace (avec les caracteres des entités lus) pour incrémenter le compteur du numéro de colonne.
+**Remarque :** 
+On définit l'espace et le saut de ligne pour faire le compte de la ligne et la colonne de l'erreur lexicale lorsqu'on la rencontre.
+Pour cela il faut compter le nombre de saut de ligne pour retrouver la ligne de l'erreur, et le nombre d'espace pour incrémenter le compteur du numéro de colonne.
 
 the 3rd part :  C'est ici qu'on enumere toutes les entités lexicales qui appartienent au langage 
                 et définir l'action générer lors de la rencontre de chaque entité.
