@@ -13,7 +13,7 @@
 chiffre [0-9]
 lettre [a-zA-Z]
 entier {chiffre}+|\([+-]?{chiffre}+\)                    
-reel {chiffre}+(\.{chiffre})?|\([+-]?{chiffre}+\.{chiffre}+\)
+reel {chiffre}+(\.{chiffre}+)?|\([+-]?{chiffre}+\.{chiffre}+\)
 idf  [A-Z][a-z]+|[a-z]*
 space ("\t"|" ")+
 saut "\n"+ 

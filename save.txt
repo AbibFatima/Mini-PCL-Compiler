@@ -1,0 +1,107 @@
+inst:   instaff ';' inst {printf ("reduction affectation\n"); } 
+		| instif ';' inst {printf ("reduction condition if\n"); } 
+		| instwhile ';' inst {printf ("reduction boucle while\n"); } 
+		|
+	    ;
+
+instaff : IDF AFF exp
+		;
+
+exp: exp ADD exp {printf ("reduction addition\n");}
+	| exp SUB exp {printf ("reduction soustraction\n");}	
+	| exp DIV exp {printf ("reduction div\n");}
+	| exp MUL exp {printf ("reduction mul\n");}
+	| IDF {printf ("reduction terminal idf dans exp\n"); }
+	| ENTIER {printf ("reduction terminal entier dans exp\n");}
+	| REEL {printf ("reduction terminal reel dans exp\n");}
+	|'('exp')' {printf ("reduction exp parentheses dans exp\n");}
+	;
+
+instif:	IF '(' conditionexp ')' '{' inst '}'
+        ;
+
+instwhile:  WHILE '(' conditionexp ')' '{' inst '}'
+            ;
+
+conditionexp :  condition  AND conditionexp
+				|  condition  OR conditionexp
+				| condition
+				;
+condition:	exp GREATER exp
+			| exp LESS exp
+			| exp EQUAL exp
+			| exp GREATEREQUAL exp
+			| exp LESSEQUAL exp 
+			| exp NOTEQUAL exp 
+			| NOT exp
+            ;
+
+
+
+
+=====================================================
+// Start symbol
+program: ID '{' vars '}' CODE '{' statements '}' '}' ;
+
+// Declarations
+vars: var_decl ';' vars 
+	| ;
+
+var_decl: type id_list ;
+
+struct_decl: STRUCT '{' struct_fields '}' ID ;
+
+const_decl: CONST ID '=' literal ;
+
+struct_fields: type ID ',' struct_fields 
+	| ;
+
+id_list: ID ',' id_list 
+	| ID ;
+
+type: INTEGER 
+	| FLOAT 
+	| ID ;
+
+literal: ENTIER 
+	| REEL ;
+
+// Statements
+statements: statement ';' statements 
+	| ;
+
+statement: assignment 
+	| if_statement 
+	| while_statement ;
+
+assignment: ID '=' expression ;
+
+if_statement: IF '(' condition ')' '{' statements '}' ELSE '{' statements '}' 
+	| IF '(' condition ')' '{' statements '}' ;
+
+while_statement: WHILE '(' condition ')' '{' statements '}' ;
+
+// Expressions
+expression: term '+' expression 
+	| term '-' expression 
+	| term ;
+
+term: factor '*' term 
+	| factor '/' term 
+	| factor ;
+
+factor: ID 
+	| literal 
+	| '(' expression ')' ;
+
+condition: expression GREATER expression 
+	| expression LESS expression 
+	| expression EQUAL expression 
+	| expression GREATEREQUAL expression 
+	| expression LESSEQUAL expression 
+	| expression NOTEQUAL expression 
+	| NOT expression ;
+
+condition_exp: condition AND condition_exp 
+	| condition OR condition_exp 
+	| condition ;

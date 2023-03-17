@@ -217,3 +217,11 @@ Exemples :
     flex tp.l \
     bison -d tp.y \
     gcc lex.yy.c tp.tab.c -o tp.exe 
+
+
+
+[See Script here : s.l](SYNTACTIC\s.l)
+
+[See Script here : s.y](SYNTACTIC\t.l)
+
+[See __ here : makefile.bat ](SYNTACTIC\makefile.bat)

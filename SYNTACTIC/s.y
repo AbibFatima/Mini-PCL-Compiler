@@ -11,43 +11,90 @@ extern int ligne, col;
 %}
 
 %union {char* nom;}
-%token IDF AFF ENTIER REEL CODE VAR CONST STRUCT ';' INTEGER FLOAT '(' ')' ',' '{' '}' AND OR NOT GREATER LESS GREATEREQUAL LESSEQUAL EQUAL NOTEQUAL IF ELSE WHILE  FOR COMMENT
+%token IDF AFF ENTIER REEL CODE VAR CONST STRUCT ';' INTEGER FLOAT '(' ')' ',' '{' '}' AND OR NOT GREATER LESS GREATEREQUAL LESSEQUAL EQUAL NOTEQUAL IF ELSE WHILE FOR COMMENT
 %left ADD SUB
 %left MUL DIV
 
 %%
-s: 	IDF '{' VAR '{' declar '}' CODE '{' inst '}' '}'
+s: 	IDF '{' VAR '{' declar '}' CODE '{' instructions '}' '}'
 	;
 
-declar: INTEGER  listidf ';' declar {printf ("reduction declar integer\n");}
-	    | FLOAT listidf ';' declar {printf ("reduction declar float\n");}
-	    | CONST declarConst ';' declar {printf ("reduction declar const\n");}
-		| STRUCT '{' declarStruct '}' IDF ';' declar {printf ("reduction declar structure\n");}
-		| IDF listidf ';' declar {printf ("reduction declar idf structure\n");}
-		|
-	    ;
+declar : 	vardeclar ';' declar
+			| structdeclar ';' declar
+			| constdeclar ';' declar
+			|
+			;
+
+vardeclar : type listidf
+			;
+
+structdeclar : 	STRUCT '{' declarStructFields '}' IDF 
+				;
+
+constdeclar : 	CONST IDF AFF literal
+				;
+
+declarStructFields : 	type IDF ',' declarStructFields
+						|
+						;
+
+type : 	INTEGER 
+		| FLOAT 
+		| IDF
+		;
 
 listidf:	IDF ',' listidf 
         	| IDF 
         	;
 
-declarStruct : 	INTEGER IDF ',' declarStruct
-				| FLOAT IDF ',' declarStruct
+literal : 	ENTIER
+			| REEL
+			;
+
+instructions : 	inst ';' instructions
 				|
 				;
 
-declarConst : 	IDF AFF ENTIER
-				| IDF AFF REEL 
-				;
-
-inst:   instaff ';' inst {printf ("reduction affectation\n"); } 
-		| instif ';' inst {printf ("reduction condition if\n"); } 
-		| instwhile ';' inst {printf ("reduction boucle while\n"); } 
-		|
+inst:   instaff  {printf ("reduction affectation\n"); } 
+		| instif  {printf ("reduction condition if\n"); } 
+		| instwhile  {printf ("reduction boucle while\n"); } 
+		| instfor {printf ("reduction boucle for\n"); } 
 	    ;
 
 instaff : IDF AFF exp
 		;
+
+instif:	IF '(' conditionexp ')' '{' instructions '}' ELSE '{' instructions '}' {printf ("reduction IF ELSE\n");} 
+		|  IF '(' conditionexp ')' '{' instructions '}' {printf ("reduction IF\n");}
+        ;
+
+instwhile:  WHILE '(' conditionexp ')' '{' instructions '}'
+            ;
+
+instfor : 	FOR '(' initfor ':' literal ':' conditionarret ')' '{' '}'
+			;
+
+initfor : 	IDF ':' literal
+			;
+
+conditionarret : IDF | literal ;
+
+conditionexp :  condition  AND conditionexp
+				| condition  OR conditionexp
+				| condition
+				;
+
+condition:	exp opcomparaison exp 
+			| NOT exp
+            ;
+
+opcomparaison : GREATER {printf ("reduction sup\n");}
+				| LESS {printf ("reduction inf\n");}
+				| EQUAL {printf ("reduction egale\n");}
+				| GREATEREQUAL {printf ("reduction sup egale\n");}
+				| LESSEQUAL {printf ("reduction inf egale\n");}
+				| NOTEQUAL {printf ("reduction pas egale\n");}
+				;
 
 exp: exp ADD exp {printf ("reduction addition\n");}
 	| exp SUB exp {printf ("reduction soustraction\n");}	
@@ -58,28 +105,10 @@ exp: exp ADD exp {printf ("reduction addition\n");}
 	| REEL {printf ("reduction terminal reel dans exp\n");}
 	|'('exp')' {printf ("reduction exp parentheses dans exp\n");}
 	;
-
-instif:	IF '(' conditionexp ')' '{' inst '}'
-        ;
-
-instwhile:  WHILE '(' conditionexp ')' '{' inst '}'
-            ;
-
-conditionexp :  condition  AND conditionexp
-				|  condition  OR conditionexp
-				| condition
-				;
-condition:	exp GREATER exp
-			| exp LESS exp
-			| exp EQUAL exp
-			| exp GREATEREQUAL exp
-			| exp LESSEQUAL exp 
-			| exp NOTEQUAL exp 
-			| NOT exp
-            ;
 %%
 int yyerror (char* msg){
-    printf (" %s ligne %d  \n",msg,ligne,col); exit (0);return 1;}
+    printf (" %s ligne %d  \n",msg,ligne,col); exit (0);return 1;
+}
 
 int main (){ 
     yyin = fopen("test.txt", "r");
