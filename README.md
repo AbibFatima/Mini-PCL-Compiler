@@ -134,31 +134,86 @@ ___
 
 ## Step 2 : Syntactic Analysis ( Analyse syntaxique )  
 
-1. We're going to create another file that we talked about eatlier which is _.y_ , it will hold the syntaxic analysis . 
-separated like the _.l_ file with the same parts but contains different
 
-2. Making some changes on the _.l_ 
+1. Before writting the script of the syntactic analysis, 
+we have to make changes in the first file that we created (.l)
 
-After that we are sure that lexical analysis is correct we remove the 4th part to copy it in this new file at the same part.
-And we also have to remove all the printf s because we do not need that anymore, and we gonna add 
+<hr>
 
-#### First part : 
-<pre>
-<code>#include <string.h>;                   //
-#include "s.tab.h";          //
-extern YYSTYPE yylval;       // </code>
-</pre>
+**THE CHANGES ARE :**
+1. Remove the main function and move it to the .y file after we checked that it works correctly.
+2. We don't have to print all the entities with ``printf("%s est un mot cle\n",yytext);``, so we going to remove them all and replace them with
 
-#### Third part : 
-<pre>
-<code>"INT" {colo+=yyleng; printf("%s est un mot cle\n",yytext);} ----> "INT" {colo+=yyleng; yyval.nom=strdup(yytext); return(INTEGER);}</code>
-</pre>
+``yylval.nom = strdup(yytext); return (INTEGER);`` : duplicated the yytext to the external variable yylval.nom 
+which will send the reconised lexical entitie to the syntactic analyzer within the ``yylval`` variable defined by BISON, but to use it we have to add two lines in the pre-code part
 
-3. Adding another command to the _makefile.bat_, then it becomes : 
-
-    flex s.l \
-    bison -d s.y  \
-    gcc lex.yy.c s.tab.c -o s.exe
+    #include<string.h>;     // needed for the strdup() function 
+    #include "tp.tab.h"     // file generated from bison it l'entete du fichier tp.tab.c qui est le code c de l'analyseur syntaxique.
+    extern YYSTYPE yylval;  // pre defined var, par défaut entier but will change that to a structure in the .y file
 
 
-##### video : 25min 
+and it returns the name of the lexical entite that we're going to use to  write the grammar.
+
+[mettre file here tp.l](\tp.l)
+<hr>
+
+2. We are going to create a new file with the extension .y which it will hold the syntaxic analysis, with the same format as the .l file, means that is a script with 3 parts devided with '%%'
+    - First part contains pre-code C 
+    - Second part : we will define the lexical entites 
+    - Third part will hold the grammar 
+    - and the last one we hold the main function (the one that were in .l file)
+
+
+
+***The first part :*** 
+
+    #include<stdio.h>
+    #include<string.h>
+    #include<stdlib.h>
+    
+    // signature de fonction
+    int yylex();       
+    int yyerror(char *);
+
+    //extern variables
+    extern FILE* yyin;
+    extern int ligne, col;
+
+***The second part :***
+
+This part contains all the lexical entites that we returned from .l file8 means that belongs to the language, set with the word ``%token`` 
+    
+    %token IDF AFF ENTIER REEL ';' INTEGER FLOAT '(' ')' '*' '+' '-' '/'
+
+***The third part :***
+
+C'est toutes les regles de production d'une grammaire LALR (ascendante) + code qui sera executé lors de la réduction avec cette régle .  
+
+Exemples : 
+
+    s: declar inst;
+    declar: INTEGER  IDF ';' declar {printf ("reduction declar integer\n");}
+	    | FLOAT IDF ';' declar {printf ("reduction declar float\n");}
+	    |
+	    ;
+
+***The fourth part :***
+
+    //We have to define the yyerror which is called when the analyzer finds an error
+    int yyerror(char* msg){
+        printf(" %s ligne %d \n",msg, ligne, col);      //msg = syntaxe error
+        exit(0);
+        return 1;
+    }
+
+    int main(){
+        yyin = fopen("in.txt","r");
+        yyparse();          //Different that the one we used in the .l file, this is the function used in the syntactic analyzer et imlicitement il va appelé yylex() de l'analyseur lexicale
+        fclode(yyin);
+    }
+
+3. Add another command in the _makefile.bat_ and it will contain : 
+
+    flex tp.l \
+    bison -d tp.y \
+    gcc lex.yy.c tp.tab.c -o tp.exe 

@@ -31,7 +31,7 @@ saut "\n"+
 "WHILE" {col+=yyleng; yylval.nom = strdup(yytext); return(WHILE);}
 {idf} {col+=yyleng; yylval.nom = strdup(yytext); return(IDF);}
 {reel} {col+=yyleng; yylval.nom = strdup(yytext); return(REEL);}
-{entier} {col+=yyleng; yylval.nom = strdup(yytext); }
+{entier} {col+=yyleng; yylval.nom = strdup(yytext); return(ENTIER); }
 "=" {col+=yyleng; return(AFF);}
 "(" {col+=yyleng; return('(');}
 ")" {col+=yyleng; return(')');}

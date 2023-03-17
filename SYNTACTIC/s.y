@@ -11,28 +11,43 @@ extern int ligne, col;
 %}
 
 %union {char* nom;}
-%token IDF AFF ENTIER REEL ';' INTEGER FLOAT '(' ')' ',' '{' '}' AND OR NOT GREATER LESS GREATEREQUAL LESSEQUAL EQUAL NOTEQUAL IF ELSE WHILE CODE VAR CONST STRUCT FOR COMMENT
+%token IDF AFF ENTIER REEL CODE VAR CONST STRUCT ';' INTEGER FLOAT '(' ')' ',' '{' '}' AND OR NOT GREATER LESS GREATEREQUAL LESSEQUAL EQUAL NOTEQUAL IF ELSE WHILE  FOR COMMENT
 %left ADD SUB
 %left MUL DIV
 
 %%
-s: IDF '{' VAR '{' declar '}' CODE '{' inst '}' '}'
+s: 	IDF '{' VAR '{' declar '}' CODE '{' inst '}' '}'
+	;
 
 declar: INTEGER  listidf ';' declar {printf ("reduction declar integer\n");}
 	    | FLOAT listidf ';' declar {printf ("reduction declar float\n");}
-	    | 
+	    | CONST declarConst ';' declar {printf ("reduction declar const\n");}
+		| STRUCT '{' declarStruct '}' IDF ';' declar {printf ("reduction declar structure\n");}
+		| IDF listidf ';' declar {printf ("reduction declar idf structure\n");}
+		|
 	    ;
 
 listidf:	IDF ',' listidf 
         	| IDF 
         	;
 
+declarStruct : 	INTEGER IDF ',' declarStruct
+				| FLOAT IDF ',' declarStruct
+				|
+				;
 
-inst:   IDF AFF exp ';' inst {printf ("reduction affectation\n"); } 
-		| instif ';' inst
-		| instwhile ';' inst
+declarConst : 	IDF AFF ENTIER
+				| IDF AFF REEL 
+				;
+
+inst:   instaff ';' inst {printf ("reduction affectation\n"); } 
+		| instif ';' inst {printf ("reduction condition if\n"); } 
+		| instwhile ';' inst {printf ("reduction boucle while\n"); } 
 		|
 	    ;
+
+instaff : IDF AFF exp
+		;
 
 exp: exp ADD exp {printf ("reduction addition\n");}
 	| exp SUB exp {printf ("reduction soustraction\n");}	
@@ -50,8 +65,8 @@ instif:	IF '(' conditionexp ')' '{' inst '}'
 instwhile:  WHILE '(' conditionexp ')' '{' inst '}'
             ;
 
-conditionexp : '(' condition ')' AND conditionexp
-				| '(' condition ')' OR conditionexp
+conditionexp :  condition  AND conditionexp
+				|  condition  OR conditionexp
 				| condition
 				;
 condition:	exp GREATER exp
@@ -62,13 +77,12 @@ condition:	exp GREATER exp
 			| exp NOTEQUAL exp 
 			| NOT exp
             ;
-
 %%
 int yyerror (char* msg){
     printf (" %s ligne %d  \n",msg,ligne,col); exit (0);return 1;}
 
 int main (){ 
     yyin = fopen("test.txt", "r");
-    yyparse ();
+    yyparse();
     fclose (yyin);
 }
