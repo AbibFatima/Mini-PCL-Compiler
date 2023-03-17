@@ -225,3 +225,5 @@ Exemples :
 [See Script here : s.y](SYNTACTIC\t.l)
 
 [See __ here : makefile.bat ](SYNTACTIC\makefile.bat)
+
+#### video = 41min
