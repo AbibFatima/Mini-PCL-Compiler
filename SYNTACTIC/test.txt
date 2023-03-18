@@ -3,13 +3,14 @@ Test  {
     {
         %% Declaration de variables
         INTEGER x,a,b; 
-        FLOAT y;
+        FLOAT y ;
+        INTEGER tableau[5];
         STRUCT {
             INTEGER matricule,
             INTEGER moyenne,
         } Etudiant;
-        Etudiant Sarra,Fatima;
-        CONST Pi = 3.14;
+        STRUCT Etudiant Sarra,Fatima;
+        CONST Pi = 3.14;  
     }
     CODE {
         %%Affecation 

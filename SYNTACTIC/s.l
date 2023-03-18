@@ -38,6 +38,8 @@ commentaire "%%"[^"\n"]*"\n"?
 ")" {col+=yyleng; return(')');}
 "{" {col+=yyleng; return('{');}
 "}" {col+=yyleng; return('}');}
+"[" {col+=yyleng; return('[');}
+"]" {col+=yyleng; return(']');}
 "+" {col+=yyleng; yylval.nom = strdup(yytext); return(ADD);}
 "-" {col+=yyleng; yylval.nom = strdup(yytext); return(SUB);}
 "/" {col+=yyleng; yylval.nom = strdup(yytext); return(DIV);}

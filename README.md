@@ -218,7 +218,6 @@ Exemples :
     gcc lex.yy.c tp.tab.c -o tp.exe 
 
 
-
 [See Script here : s.l](SYNTACTIC\s.l)
 
 [See Script here : s.y](SYNTACTIC\s.y)
@@ -226,3 +225,44 @@ Exemples :
 [See __ here : makefile.bat ](SYNTACTIC\makefile.bat)
 
 #### video = 41min
+
+
+> REMARQUE : \
+On redéfinit la variable yylval dans le fichier .y avec l'instruction ``%union {char nom*;}``
+
+<pre>
+<code>%left ADD SUB   //veut dire que l'addition et la substration  sont plus
+%let MUL DIV    //prioritaire que la multiplication et la division</code>
+</pre>
+
+### Step 3 : Table des Symboles
+
+Pour la réalisation de la table des symboles qui englobe l'ensemble des entités lexicales du code analysé (mais concretement, elle englobera les idfs rencontré seulement) on deuvra rajouter deux fichiers : 
+    - TS.h : on va definir un tableau pour les idfs (elle peut etre sous forme d'une liste chainée ou une table de hachage aussi) qui est un tableau d'elements (nom et type)
+    et aussi on définit les signatures des fonctions prémitives 
+    de ce point, on ajoutera le fichier TS.x
+<pre>
+<code>#define TS_H
+    
+#define taille 10000
+
+typedef struct{
+        char* nom;
+        int type;
+}elem;
+
+//fonction qui recherche un element chaine de caractere dans table des symboles
+int recherche(char *);
+
+//fonction d'insertion d'un idf dans la table
+void inserer(char *, int);
+
+//fonction qui affiche la table des symboles
+void affichierTS();
+
+//fonction qui retourne le type d'un IDF
+int typeidf(char *);
+
+#endif //TS_H
+</code></pre>
+    - TS.c : 

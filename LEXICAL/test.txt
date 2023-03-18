@@ -10,6 +10,7 @@ Test  {
             INTEGER moyenne,
         } Etudiant;
         Etudiant Sarra,Fatima;
+        INTEGER Tab[5];
     }
     CODE 
     {

@@ -35,6 +35,8 @@ commentaire "%%"[^"\n"]*"\n"?
 ")" {col+=yyleng; printf ("%s est un separateur\n",yytext);}
 "{" {col+=yyleng; printf ("%s est un separateur\n",yytext);}
 "}" {col+=yyleng; printf ("%s est un separateur\n",yytext);}
+"[" {col+=yyleng; printf ("%s est un separateur\n",yytext);}
+"]" {col+=yyleng; printf ("%s est un separateur\n",yytext);}
 "+" {col+=yyleng; printf ("%s est un operateur\n",yytext);}
 "-" {col+=yyleng; printf ("%s est un operateur\n",yytext);}
 "/" {col+=yyleng; printf ("%s est un operateur\n",yytext);}
