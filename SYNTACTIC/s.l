@@ -17,6 +17,7 @@ reel {chiffre}+(\.{chiffre}+)?|\([+-]?{chiffre}+\.{chiffre}+\)
 idf  [A-Z][a-z]+|[a-z]*
 space ("\t"|" ")+
 saut "\n"+ 
+commentaire "%%"[^"\n"]*"\n"?
 
 %%
 "VAR" {col+=yyleng; yylval.nom = strdup(yytext); return(VAR);}
@@ -52,7 +53,8 @@ saut "\n"+
 "!=" {col+=yyleng; yylval.nom = strdup(yytext); return(NOTEQUAL);}
 "," {col+=yyleng; yylval.nom = strdup(yytext); return',';}
 ";" {col+=yyleng; yylval.nom = strdup(yytext); return';';}
-"%%" {col+=yyleng; yylval.nom = strdup(yytext); return(COMMENT);}
+":" {col+=yyleng; yylval.nom = strdup(yytext); return';';}
+{commentaire} {col+=yyleng; yylval.nom = strdup(yytext); return(COMMENT);}
 {space} {col+=yyleng;}
 {saut} {col=1; ligne+=yyleng;}
 . {printf("erreur lexicale entite %s ligne %d colnne %d \n",yytext,ligne,col);}

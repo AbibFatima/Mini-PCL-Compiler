@@ -1,7 +1,8 @@
 Test  {
     VAR
     {
-        INTEGER x,a,b;
+        %% Declaration de variables
+        INTEGER x,a,b; 
         FLOAT y;
         STRUCT {
             INTEGER matricule,
@@ -11,8 +12,21 @@ Test  {
         CONST Pi = 3.14;
     }
     CODE {
-        WHILE (y < x){
-            x = 5;
+        %%Affecation 
+        a = b;
+        %%condition if 
+        IF (a == b){
+            a = a/2;
+        } ELSE {
+            b = b + 1;
+        }
+        %%Boucle while
+        WHILE (y<x){ 
+            x = 5; 
+        }
+        %%Boucle for
+        FOR(i:0:1:x){
+            x = 1;
         }
     }
 }

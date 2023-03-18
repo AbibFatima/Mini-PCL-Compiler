@@ -16,63 +16,51 @@ extern int ligne, col;
 %left MUL DIV
 
 %%
-s: 	IDF '{' VAR '{' declar '}' CODE '{' instructions '}' '}'
-	;
+s: 	IDF '{' VAR '{' declar '}' CODE '{' instructions '}' '}' ;
 
 declar : 	vardeclar ';' declar
 			| structdeclar ';' declar
 			| constdeclar ';' declar
-			|
-			;
+			| COMMENT declar
+			|;
 
-vardeclar : type listidf
-			;
+vardeclar : type listidf;
 
-structdeclar : 	STRUCT '{' declarStructFields '}' IDF 
-				;
+structdeclar : 	STRUCT '{' declarStructFields '}' IDF ;
 
-constdeclar : 	CONST IDF AFF literal
-				;
+constdeclar : 	CONST IDF AFF literal ;
 
 declarStructFields : 	type IDF ',' declarStructFields
-						|
-						;
+						|;
 
-type : 	INTEGER 
-		| FLOAT 
-		| IDF
+type : 	INTEGER | FLOAT | IDF
 		;
 
 listidf:	IDF ',' listidf 
         	| IDF 
         	;
 
-literal : 	ENTIER
-			| REEL
-			;
+literal : 	ENTIER | REEL ;
 
-instructions : 	inst ';' instructions
-				|
-				;
+instructions : 	inst instructions
+				| ;
 
-inst:   instaff  {printf ("reduction affectation\n"); } 
+inst:   instaff ';' {printf ("reduction affectation\n"); } 
 		| instif  {printf ("reduction condition if\n"); } 
 		| instwhile  {printf ("reduction boucle while\n"); } 
 		| instfor {printf ("reduction boucle for\n"); } 
+		| COMMENT inst
 	    ;
 
-instaff : IDF AFF exp
-		;
+instaff : IDF AFF exp ;
 
 instif:	IF '(' conditionexp ')' '{' instructions '}' ELSE '{' instructions '}' {printf ("reduction IF ELSE\n");} 
 		|  IF '(' conditionexp ')' '{' instructions '}' {printf ("reduction IF\n");}
         ;
 
 instwhile:  WHILE '(' conditionexp ')' '{' instructions '}'
-            ;
 
-instfor : 	FOR '(' initfor ':' literal ':' conditionarret ')' '{' '}'
-			;
+instfor : 	FOR '(' initfor ':' literal ':' conditionarret ')' '{' instructions '}' ;
 
 initfor : 	IDF ':' literal
 			;

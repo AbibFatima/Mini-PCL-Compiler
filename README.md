@@ -1,4 +1,4 @@
-# Mini-PCL-Compiler : HOW TO MAKE A MINI COMPILER
+# PROJECT : HOW TO MAKE A MINI-PCL-COMPILER
 Making a mini PCL compiler using flex/bison
 
 
@@ -49,7 +49,7 @@ ____
 On définit l'espace et le saut de ligne pour faire le compte de la ligne et la colonne de l'erreur lexicale lorsqu'on la rencontre. 
 Pour cela il faut compter le nombre de saut de ligne pour retrouver la ligne de l'erreur, et le nombre d'espace pour incrémenter le compteur du numéro de colonne.
 ___
-### The Thirs part :  
+### The Third part :  
 C'est dans cette que l'enumeration de toutes les entités lexicales qui appartienent au langage est faite et la définition des actions générer lors de la rencontre de chaque entité.
 
 Le processus :
@@ -154,7 +154,7 @@ which will send the reconised lexical entitie to the syntactic analyzer within t
 
 and it returns the name of the lexical entite that we're going to use to  write the grammar.
 
-[mettre file here tp.l](\tp.l)
+[mettre file here s.l](SYNTACTIC\s.l)
 <hr>
 
 2. We are going to create a new file with the extension .y which it will hold the syntaxic analysis, with the same format as the .l file, means that is a script with 3 parts devided with '%%'
@@ -164,8 +164,7 @@ and it returns the name of the lexical entite that we're going to use to  write 
     - and the last one we hold the main function (the one that were in .l file)
 
 
-
-***The first part :*** 
+### The first part :
 
     #include<stdio.h>
     #include<string.h>
@@ -179,13 +178,13 @@ and it returns the name of the lexical entite that we're going to use to  write 
     extern FILE* yyin;
     extern int ligne, col;
 
-***The second part :***
+### The second part :
 
 This part contains all the lexical entites that we returned from .l file8 means that belongs to the language, set with the word ``%token`` 
     
     %token IDF AFF ENTIER REEL ';' INTEGER FLOAT '(' ')' '*' '+' '-' '/'
 
-***The third part :***
+### The third part :
 
 C'est toutes les regles de production d'une grammaire LALR (ascendante) + code qui sera executé lors de la réduction avec cette régle .  
 
@@ -197,7 +196,7 @@ Exemples :
 	    |
 	    ;
 
-***The fourth part :***
+### The fourth part :
 
     //We have to define the yyerror which is called when the analyzer finds an error
     int yyerror(char* msg){
@@ -222,7 +221,7 @@ Exemples :
 
 [See Script here : s.l](SYNTACTIC\s.l)
 
-[See Script here : s.y](SYNTACTIC\t.l)
+[See Script here : s.y](SYNTACTIC\s.y)
 
 [See __ here : makefile.bat ](SYNTACTIC\makefile.bat)
 
