@@ -4,7 +4,10 @@ Test  {
         %% Declaration de variables
         INTEGER x,a,b; 
         FLOAT y ;
-        INTEGER tableau[5];
+        
+        INTEGER  tableau [5] STRUCT;
+        
+        
         STRUCT {
             INTEGER matricule,
             INTEGER moyenne,

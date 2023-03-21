@@ -16,78 +16,69 @@ extern int ligne, col;
 %left MUL DIV
 
 %%
-s: 	IDF '{' VAR '{' declar '}' CODE '{' instructions '}' '}' ;
+s: 	IDF '{' VAR '{' DECLARATION '}' CODE '{' Instructionsions '}' '}' ;
 
-declar : 	vardeclar ';' declar {printf ("reduction vardeclar\n"); } 
-			| structdeclar ';' declar {printf ("reduction struct declar\n"); }
-			| structelemdeclar ';' declar {printf ("reduction struct elem declar\n"); }
-			| constdeclar ';' declar {printf ("reduction const declar\n"); }
-			| COMMENT declar {printf ("reduction comment declar\n"); }
+DECLARATION : DECLARATION_Variables ';' DECLARATION {printf ("reduction vardeclar\n"); } 
+			| DECLARATION_Struct ';' DECLARATION {printf ("reduction struct declar\n"); }
+			| DECLARATION_Struct_Var ';' DECLARATION {printf ("reduction struct elem declar\n"); }
+			| DECLARATION_Tableau ';' DECLARATION
+			| DECLARATION_Const ';' DECLARATION {printf ("reduction const declar\n"); }
+			| COMMENT DECLARATION {printf ("reduction comment declar\n"); }
 			|;
 
-vardeclar : type listidf ;
+DECLARATION_Variables : TYPE liste_idf ;
 
-structdeclar : 	STRUCT '{' vardeclar '}' IDF ;
+DECLARATION_Struct : STRUCT '{' DECLARATION_Variables '}' IDF ;
 
-structelemdeclar : STRUCT IDF listidf  ;
+DECLARATION_Struct_Var : STRUCT IDF liste_idf  ;
 
-constdeclar : 	CONST IDF AFF literal ;
+DECLARATION_Const :  CONST IDF AFF literal ;
 
-type : 	INTEGER {printf ("reduction mot cle INTEGER dans type\n");}
-		| FLOAT {printf ("reduction mot cle FLOAT dans type\n");}
+TYPE : 	INTEGER {printf ("reduction mot cle INTEGER dans TYPE\n");}
+		| FLOAT {printf ("reduction mot cle FLOAT dans TYPE\n");}
 		;
 
-listidf:	IDF ',' listidf {printf ("reduction : IDF,listidf dans listidf\n");}
-			| tabdeclar ',' listidf {printf ("reduction : tabdeclar,listidf dans listidf\n");}
-			| tabdeclar {printf ("reduction : tabdeclar dans listidf\n");}
-        	| IDF {printf ("reduction : IDF dans listidf  \n");}
+liste_idf:	IDF ',' liste_idf {printf ("reduction : IDF,liste_idf dans liste_idf\n");}
+        	| IDF {printf ("reduction : IDF dans liste_idf  \n");}
         	;
 
-tabdeclar :  IDF '[' ENTIER ']' {printf ("reduction tabdeclar\n");};
+DECLARATION_Tableau : IDF '[' ENTIER ']' STRUCT {printf ("reduction DECLARATION_Tableau\n");}
+			;
 
 literal : 	ENTIER | REEL ;
 
-instructions : 	inst instructions
+Instructionsions : 	Inst Instructionsions
 				| ;
 
-inst:   instaff ';' {printf ("reduction affectation\n"); } 
-		| instif  {printf ("reduction condition if\n"); } 
-		| instwhile  {printf ("reduction boucle while\n"); } 
-		| instfor {printf ("reduction boucle for\n"); } 
+Inst:   Inst_AFF ';' {printf ("reduction affectation\n"); } 
+		| Inst_IF  {printf ("reduction Condition if\n"); } 
+		| Inst_WHILE  {printf ("reduction boucle while\n"); } 
+		| Inst_FOR {printf ("reduction boucle for\n"); } 
 		| COMMENT inst {printf ("reduction comment dans inst\n"); } 
 	    ;
 
-instaff : IDF AFF exp ;
+Inst_AFF : IDF AFF expression ;
 
-instif:	IF '(' conditionexp ')' '{' instructions '}' ELSE '{' instructions '}' {printf ("reduction IF ELSE\n");} 
-		|  IF '(' conditionexp ')' '{' instructions '}' {printf ("reduction IF\n");}
+Inst_IF:	IF '(' Expression_Condition ')' '{' Instructions '}' ELSE '{' Instructions '}' {printf ("reduction IF ELSE\n");} 
+		|  IF '(' Expression_Condition ')' '{' Instructions '}' {printf ("reduction IF\n");}
         ;
 
-instwhile:  WHILE '(' conditionexp ')' '{' instructions '}'
+Inst_WHILE:  WHILE '(' Expression_Condition ')' '{' Instructions '}'
 			;
 
-instfor : 	FOR '(' initfor ':' pasfor ':' conditionarret ')' '{' instructions '}' 
+Inst_FOR : 	FOR '(' IDF ':' literal ':' literal ':' IDF ')' '{' Instructions '}' 
 			;
 
-initfor : 	IDF ':' literal
-			;
-
-pasfor : 	literal
-			;
-
-conditionarret : IDF  
-				 ;
-
-conditionexp :  condition  AND conditionexp
-				| condition  OR conditionexp
-				| condition
+Expression_Condition :  Condition  AND Expression_Condition
+				| Condition  OR Expression_Condition
+				| Condition
 				;
 
-condition:	exp opcomparaison exp 
-			| NOT exp
+Condition:	expression OP_expression expression 
+			| NOT expression
             ;
 
-opcomparaison : GREATER {printf ("reduction sup\n");}
+OP_expression : GREATER {printf ("reduction sup\n");}
 				| LESS {printf ("reduction inf\n");}
 				| EQUAL {printf ("reduction egale\n");}
 				| GREATEREQUAL {printf ("reduction sup egale\n");}
@@ -95,14 +86,14 @@ opcomparaison : GREATER {printf ("reduction sup\n");}
 				| NOTEQUAL {printf ("reduction pas egale\n");}
 				;
 
-exp: exp ADD exp {printf ("reduction addition\n");}
-	| exp SUB exp {printf ("reduction soustraction\n");}	
-	| exp DIV exp {printf ("reduction div\n");}
-	| exp MUL exp {printf ("reduction mul\n");}
+expression: expression ADD expression {printf ("reduction addition\n");}
+	| expression SUB expression {printf ("reduction soustraction\n");}	
+	| expression DIV expression {printf ("reduction div\n");}
+	| expression MUL expression {printf ("reduction mul\n");}
 	| IDF {printf ("reduction terminal idf dans exp\n"); }
 	| ENTIER {printf ("reduction terminal entier dans exp\n");}
 	| REEL {printf ("reduction terminal reel dans exp\n");}
-	|'('exp')' {printf ("reduction exp parentheses dans exp\n");}
+	|'(' expression ')' {printf ("reduction exp parentheses dans exp\n");}
 	;
 %%
 int yyerror (char* msg){
