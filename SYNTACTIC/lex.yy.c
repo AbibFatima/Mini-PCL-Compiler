@@ -852,7 +852,7 @@ YY_RULE_SETUP
 case 36:
 YY_RULE_SETUP
 #line 58 "s.l"
-{col+=yyleng; yylval.nom = strdup(yytext); return';';}
+{col+=yyleng; yylval.nom = strdup(yytext); return':';}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP

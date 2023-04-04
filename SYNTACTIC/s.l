@@ -55,7 +55,7 @@ commentaire "%%"[^"\n"]*"\n"?
 "!=" {col+=yyleng; yylval.nom = strdup(yytext); return(NOTEQUAL);}
 "," {col+=yyleng; yylval.nom = strdup(yytext); return',';}
 ";" {col+=yyleng; yylval.nom = strdup(yytext); return';';}
-":" {col+=yyleng; yylval.nom = strdup(yytext); return';';}
+":" {col+=yyleng; yylval.nom = strdup(yytext); return':';}
 {commentaire} {col+=yyleng; yylval.nom = strdup(yytext); return(COMMENT);}
 {space} {col+=yyleng;}
 {saut} {col=1; ligne+=yyleng;}
