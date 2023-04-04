@@ -16,63 +16,70 @@ extern int ligne, col;
 %left MUL DIV
 
 %%
-s: 	IDF '{' VAR '{' DECLARATION '}' CODE '{' Instructionsions '}' '}' ;
+s: 	IDF '{' VAR '{' DECLARATION '}' CODE '{' Instructions '}' '}' ;
 
-DECLARATION : DECLARATION_Variables ';' DECLARATION {printf ("reduction vardeclar\n"); } 
-			| DECLARATION_Struct ';' DECLARATION {printf ("reduction struct declar\n"); }
-			| DECLARATION_Struct_Var ';' DECLARATION {printf ("reduction struct elem declar\n"); }
+DECLARATION : DECLARATION_Variables ';' DECLARATION 
+			| DECLARATION_Struct ';' DECLARATION 
+			| DECLARATION_Struct_Var ';' DECLARATION 
 			| DECLARATION_Tableau ';' DECLARATION
-			| DECLARATION_Const ';' DECLARATION {printf ("reduction const declar\n"); }
-			| COMMENT DECLARATION {printf ("reduction comment declar\n"); }
+			| DECLARATION_Const ';' DECLARATION
+			| COMMENT DECLARATION 
 			|;
 
 DECLARATION_Variables : TYPE liste_idf ;
 
-DECLARATION_Struct : STRUCT '{' DECLARATION_Variables '}' IDF ;
+DECLARATION_Struct : STRUCT '{' declarStructFields '}' IDF ;
 
 DECLARATION_Struct_Var : STRUCT IDF liste_idf  ;
 
 DECLARATION_Const :  CONST IDF AFF literal ;
 
-TYPE : 	INTEGER {printf ("reduction mot cle INTEGER dans TYPE\n");}
-		| FLOAT {printf ("reduction mot cle FLOAT dans TYPE\n");}
+DECLARATION_Tableau : 	TYPE IDF '[' literal ']' 
+						;
+TYPE : 	INTEGER 
+		| FLOAT 
 		;
 
-liste_idf:	IDF ',' liste_idf {printf ("reduction : IDF,liste_idf dans liste_idf\n");}
-        	| IDF {printf ("reduction : IDF dans liste_idf  \n");}
+liste_idf:	IDF ',' liste_idf 
+        	| IDF 
         	;
 
-DECLARATION_Tableau : IDF '[' ENTIER ']' STRUCT {printf ("reduction DECLARATION_Tableau\n");}
-			;
+declarStructFields : 	TYPE IDF ',' declarStructFields
+						|;
 
 literal : 	ENTIER | REEL ;
 
-Instructionsions : 	Inst Instructionsions
-				| ;
+Instructions : 	Inst Instructions
+				|;
 
-Inst:   Inst_AFF ';' {printf ("reduction affectation\n"); } 
-		| Inst_IF  {printf ("reduction Condition if\n"); } 
-		| Inst_WHILE  {printf ("reduction boucle while\n"); } 
-		| Inst_FOR {printf ("reduction boucle for\n"); } 
-		| COMMENT inst {printf ("reduction comment dans inst\n"); } 
+Inst:   Inst_AFF ';'
+		| Inst_IF  
+		| Inst_WHILE  
+		| Inst_FOR
+		| COMMENT Inst
 	    ;
 
 Inst_AFF : IDF AFF expression ;
 
-Inst_IF:	IF '(' Expression_Condition ')' '{' Instructions '}' ELSE '{' Instructions '}' {printf ("reduction IF ELSE\n");} 
-		|  IF '(' Expression_Condition ')' '{' Instructions '}' {printf ("reduction IF\n");}
-        ;
+Inst_IF:	IF '(' Expression_Condition ')' '{' Instructions '}' ELSE '{' Instructions '}' 
+			|  IF '(' Expression_Condition ')' '{' Instructions '}' 
+        	;
 
-Inst_WHILE:  WHILE '(' Expression_Condition ')' '{' Instructions '}'
+Inst_WHILE: WHILE '(' Expression_Condition ')' '{' Instructions '}'
 			;
 
-Inst_FOR : 	FOR '(' IDF ':' literal ':' literal ':' IDF ')' '{' Instructions '}' 
+Inst_FOR : 	FOR '(' Expression_FOR ')'  '{' Instructions '}' 
 			;
+
+Expression_FOR : Init_FOR ':' Pas_FOR ':' Cond_arret ; 
+Init_FOR : IDF ':' literal ;
+Pas_FOR : literal ;
+Cond_arret : IDF | literal;
 
 Expression_Condition :  Condition  AND Expression_Condition
-				| Condition  OR Expression_Condition
-				| Condition
-				;
+						| Condition  OR Expression_Condition
+						| Condition
+						;
 
 Condition:	expression OP_expression expression 
 			| NOT expression
@@ -103,5 +110,6 @@ int yyerror (char* msg){
 int main (){ 
     yyin = fopen("test.txt", "r");
     yyparse();
+	printf("good");
     fclose (yyin);
 }

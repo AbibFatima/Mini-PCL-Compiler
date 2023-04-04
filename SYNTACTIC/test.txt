@@ -1,36 +1,19 @@
-Test  {
-    VAR
-    {
-        %% Declaration de variables
+Test {
+    VAR {
+        %% Declar.ation de variables
         INTEGER x,a,b; 
-        FLOAT y ;
-        
-        INTEGER  tableau [5] STRUCT;
-        
-        
+        FLOAT y;
+        INTEGER tableau[5];
         STRUCT {
             INTEGER matricule,
             INTEGER moyenne,
         } Etudiant;
         STRUCT Etudiant Sarra,Fatima;
-        CONST Pi = 3.14;  
+        CONST Pi = 3.14;
     }
     CODE {
-        %%Affecation 
-        a = b;
-        %%condition if 
-        IF (a == b){
-            a = a/2;
-        } ELSE {
-            b = b + 1;
-        }
-        %%Boucle while
-        WHILE (y<x){ 
-            x = 5; 
-        }
-        %%Boucle for
-        FOR(i:0:1:x){
-            x = 1;
+        
+        FOR ( i : 0 : 2 : n )  {
         }
     }
 }
