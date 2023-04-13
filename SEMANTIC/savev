@@ -19,14 +19,14 @@ char* Op;
 %}
 %union {
 	char* nom;
-	float type;
+	int* entier;
+  	double* reel;
 }
 %token<entier>
 %token<reel>
 %token<nom> IDF AFF ENTIER REEL CODE VAR CONST STRUCT ':' ';' INTEGER FLOAT '(' ')' ','  '{' '}' '[' ']' AND OR NOT GREATER LESS GREATEREQUAL LESSEQUAL EQUAL NOTEQUAL IF ELSE WHILE FOR COMMENT
 %left ADD SUB
 %left MUL DIV
-%type<type> expression
 
 %%	
 s: 	IDF '{' VAR '{' DECLARATION '}' CODE '{' Instructions '}' '}' { printf ("programme syntaxiquement juste \n");YYACCEPT ;}
@@ -114,15 +114,16 @@ OP_expression : GREATER | LESS | EQUAL | GREATEREQUAL| LESSEQUAL | NOTEQUAL
 				;
 	
 expression: expression ADD expression {
-										strcpy(tab_expression[indice_tab_expr],"+"); 
+										Op="+"; 
+										strcpy(tab_expression[indice_tab_expr],Op); 
 										indice_tab_expr++; 
 									}
-	| expression SUB expression { strcpy(tab_expression[indice_tab_expr],"-"); indice_tab_expr++; }	
-	| expression DIV expression { strcpy(tab_expression[indice_tab_expr],"/"); indice_tab_expr++; }
-	| expression MUL expression { strcpy(tab_expression[indice_tab_expr],"*"); indice_tab_expr++; }
+	| expression SUB expression {Op="-"; strcpy(tab_expression[indice_tab_expr],Op); indice_tab_expr++; }	
+	| expression DIV expression {Op="/"; strcpy(tab_expression[indice_tab_expr],Op); indice_tab_expr++; }
+	| expression MUL expression {Op="*"; strcpy(tab_expression[indice_tab_expr],Op); indice_tab_expr++; }
 	| IDF { 
 			dec($1); 
-			printf("IDF: %s\n", $1); 
+			printf("IDF: %s\n", $1);
 			strcpy(tab_expression[indice_tab_expr],$1); 
 			printf("\n I STOPED HERE \n"); indice_tab_expr++;
 		}
