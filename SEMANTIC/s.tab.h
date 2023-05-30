@@ -39,10 +39,10 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     IDF = 258,
-     AFF = 259,
-     ENTIER = 260,
-     REEL = 261,
+     ENTIER = 258,
+     REEL = 259,
+     IDF = 260,
+     AFF = 261,
      CODE = 262,
      VAR = 263,
      CONST = 264,
@@ -77,15 +77,16 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 20 "s.y"
+#line 24 "s.y"
 
 	char* nom;
-	float type;
+	int ent;
+	float reel;
 
 
 
 /* Line 1676 of yacc.c  */
-#line 89 "s.tab.h"
+#line 90 "s.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

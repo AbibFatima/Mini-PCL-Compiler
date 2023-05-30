@@ -4,18 +4,20 @@
 char* tab_expression[100];
 
 //routine semantique de la double declaration d'un idf
-void doubleDec (char* );
+int doubleDec (char*);
 
 //routine semantique de la non declaration d'un idf
 void dec (char * );
 
 //Routine semantique de la division par zero
-void divZero(int);
+//void divZero(int);
 
 //Routine semantique de l'incompatibilité de type
-void incompType(char *, char*);
 
 //Routine semantique de modification de constante
 void modifConstante(char *);
+
+//routine semantique de la non declaration de tableau
+void decTab (char* el);
 
 #endif// RS_H

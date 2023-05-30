@@ -6,6 +6,7 @@
 #include "RS.h"
  
 int indice_tab_expr = 0; 
+float value;
 
 int yylex();
 int yyerror(char *);
@@ -15,61 +16,108 @@ extern int ligne, col;
 
 int type;
 int nature;
+int size=0 ;
 char* Op;
 %}
+
+%start s
 %union {
 	char* nom;
-	float type;
+	int ent;
+	float reel;
 }
-%token<entier>
-%token<reel>
-%token<nom> IDF AFF ENTIER REEL CODE VAR CONST STRUCT ':' ';' INTEGER FLOAT '(' ')' ','  '{' '}' '[' ']' AND OR NOT GREATER LESS GREATEREQUAL LESSEQUAL EQUAL NOTEQUAL IF ELSE WHILE FOR COMMENT
+
+%token<ent> ENTIER
+%token<reel> REEL
+%token<nom> IDF AFF CODE VAR CONST STRUCT ':' ';' INTEGER FLOAT '(' ')' ','  '{' '}' '[' ']' AND OR NOT GREATER LESS GREATEREQUAL LESSEQUAL EQUAL NOTEQUAL IF ELSE WHILE FOR COMMENT
+
 %left ADD SUB
 %left MUL DIV
-%type<type> expression
-
+%type<ent> expression
+%type<ent> DECLARATION_Tableau
 %%	
-s: 	IDF '{' VAR '{' DECLARATION '}' CODE '{' Instructions '}' '}' { printf ("programme syntaxiquement juste \n");YYACCEPT ;}
+s: 	IDF '{' VAR '{' DECLARATION '}' CODE '{' Instructions '}' '}' { printf ("\nprogramme syntaxiquement juste.\n");YYACCEPT ;}
 	;
 
-DECLARATION : DECLARATION_Variables ';' DECLARATION 
-			| DECLARATION_Struct ';' DECLARATION 
-			| DECLARATION_Struct_Var ';' DECLARATION 
-			| DECLARATION_Tableau ';' DECLARATION
-			| DECLARATION_Const ';' DECLARATION 
-			| COMMENT DECLARATION 
-			|;
+DECLARATION : 	DECLARATION_Variables ';' DECLARATION 
+				| DECLARATION_Struct ';' DECLARATION 
+				| DECLARATION_Struct_Var ';' DECLARATION 
+				| DECLARATION_Tableau ';' DECLARATION
+				| DECLARATION_Const ';' DECLARATION 
+				| COMMENT DECLARATION 
+				|
+				;
 
 DECLARATION_Variables : TYPE liste_idf  
 						;
 
-liste_idf:	IDF ',' liste_idf { doubleDec ($1); inserer($1,type,nature);}
-        	| IDF  {doubleDec ($1); inserer($1,type,nature);}
+liste_idf:	IDF ',' liste_idf { if(doubleDec($1)==1){
+									yyerror("Double declaration");
+								} else { inserer($1,type,nature,size,0); }
+							}
+        	| IDF  { 	if(doubleDec($1)==1){
+								yyerror("Double declaration");
+						} else { inserer($1,type,nature,size,0);}
+					}
         	;			
 
-DECLARATION_Struct : STRUCT '{' declarStructFields '}' IDF { doubleDec ($5); type=0; nature=2; inserer($5,type,nature);} ;
+DECLARATION_Struct : STRUCT '{' declarStructFields '}' IDF { 
+																if(doubleDec($5)==1){
+																	yyerror("Double declaration");
+																} else {
+																	type=0; 
+																	nature=2; 
+																	size=0; 
+																	inserer($5,type,nature,size,0);
+																}
+					}
+					;
 
 DECLARATION_Struct_Var : STRUCT IDF {type=0; nature=2;} liste_idf ;
 
-DECLARATION_Const : CONST IDF AFF literal {doubleDec ($2); nature=1; inserer($2,type,nature);}
+DECLARATION_Const : CONST IDF AFF literal {
+											if(doubleDec($2)==1){
+												yyerror("Double declaration");
+											} else { 	
+												nature=1; 
+												size=0; 
+												inserer($2,type,nature,size,0);
+											}
+					}
 					;
 
-DECLARATION_Tableau : 	TYPE IDF '[' literal ']' {doubleDec ($2); nature=3; inserer ($2,type,nature);}
-						;
+DECLARATION_Tableau : 	TYPE IDF '[' ENTIER ']' {
+													if(doubleDec($2)==1){
+																	yyerror("Double declaration");
+													} else {
+														nature=3; 
+														inserer ($2,type,nature,$4,0);
+													}
+					}
+					;
 
-declarStructFields : 	TYPE IDF ',' declarStructFields {doubleDec ($2); nature=0; inserer($2,type,nature);}
-						|;
+declarStructFields : 	TYPE IDF ',' declarStructFields { 	if(doubleDec($2)==1){
+																	yyerror("Double declaration");
+															} else {
+																	nature=0; 
+																	size =0; 
+																	inserer($2,type,nature,size,0);
+															}
+														}
+					|
+					;
 
-TYPE : 	INTEGER {type=1;}
-		| FLOAT {type=2;}
+TYPE : 	INTEGER { type=1; }
+		| FLOAT { type=2; }
 		;
 
-literal : 	ENTIER {type=1;}
-			| REEL {type=2;}
+literal : 	ENTIER { type=1; }
+			| REEL { type=2; }
 			;
 
 Instructions : 	Inst Instructions
-				|;
+				|
+				;
 
 Inst:   Inst_AFF ';' 
 		| Inst_IF  
@@ -79,7 +127,19 @@ Inst:   Inst_AFF ';'
 	    ;
 		
 
-Inst_AFF : 	IDF AFF expression {printf("\n I STOPED HERE \n"); dec ($1); incompType($1,$3); divZero(indice_tab_expr); indice_tab_expr=0;  }
+Inst_AFF : 	IDF AFF expression {
+									dec($1); 
+									modifConstante($1);
+									decTab($1);
+									if (typeIdf($1)!=$3) 
+										yyerror("erreur semantique incompatibilite des types affectation."); 
+								}
+			| IDF'[' ENTIER ']' AFF expression {
+									decTab($1);
+									modifConstante($1);
+									if (typeIdf($1)!=$6) 
+										yyerror("erreur semantique incompatibilite des types affectation."); 
+								}
 			;
 
 Inst_IF:	IF '(' Expression_Condition ')' '{' Instructions '}' ELSE '{' Instructions '}' 
@@ -94,11 +154,11 @@ Inst_FOR : 	FOR '(' Expression_FOR ')'  '{' Instructions '}'
 
 Expression_FOR 	: Init_FOR ':' Pas_FOR ':' Cond_arret 
 				; 
-Init_FOR : 	IDF ':' literal {dec ($1);} 
+Init_FOR : 	IDF ':' literal {dec($1);} 
 			;
 Pas_FOR : literal 
 		;
-Cond_arret : 	IDF {dec ($1);}
+Cond_arret : 	IDF {dec($1);}
 				| literal 
 				;
 
@@ -113,34 +173,49 @@ Condition:	expression OP_expression expression | NOT expression
 OP_expression : GREATER | LESS | EQUAL | GREATEREQUAL| LESSEQUAL | NOTEQUAL 
 				;
 	
-expression: expression ADD expression {
-										strcpy(tab_expression[indice_tab_expr],"+"); 
-										indice_tab_expr++; 
+expression: expression ADD expression { 
+										if ($1!=$3) yyerror ("erreur semantique incompatibilite des types"); 
+										$$=$1; 
 									}
-	| expression SUB expression { strcpy(tab_expression[indice_tab_expr],"-"); indice_tab_expr++; }	
-	| expression DIV expression { strcpy(tab_expression[indice_tab_expr],"/"); indice_tab_expr++; }
-	| expression MUL expression { strcpy(tab_expression[indice_tab_expr],"*"); indice_tab_expr++; }
+	| expression SUB expression { 
+									if ($1!=$3) yyerror ("erreur semantique incompatibilite des types"); 
+									$$=$1; 
+								}	
+	| expression DIV expression { 
+									if ($1!=$3) yyerror ("erreur semantique incompatibilite des types"); 
+									$$=$1; 
+								}
+	| expression MUL expression { 
+									if ($1!=$3) yyerror ("erreur semantique incompatibilite des types"); 
+									$$=$1; 
+								}
 	| IDF { 
 			dec($1); 
+			$$=typeIdf($1); 
 			printf("IDF: %s\n", $1); 
-			strcpy(tab_expression[indice_tab_expr],$1); 
-			printf("\n I STOPED HERE \n"); indice_tab_expr++;
 		}
-	| ENTIER { strcpy(tab_expression[indice_tab_expr],$1); indice_tab_expr++; }
-	| REEL { strcpy(tab_expression[indice_tab_expr],$1); indice_tab_expr++; }
-	|'(' expression ')' { strcpy(tab_expression[indice_tab_expr],"("); indice_tab_expr++; yyparse(); strcpy(tab_expression[indice_tab_expr],")"); indice_tab_expr++; }
+	| ENTIER { 
+				$$=1; 
+			}
+	| REEL { 
+				$$=2; 
+			}
+	|'(' expression ')' { 
+							$$=$2; }
 	;
 %%
 int yyerror (char* msg){
-    printf ("%s : ligne %d, colonne %d \n",msg,ligne,col); exit (0);return 1;
+    printf ("%s : ligne %d, colonne %d \n",msg,ligne,col); 
+	exit (0);
+	return 1;
 }
 
 int main (){ 
     yyin = fopen("test.txt", "r");
     yyparse();
-	//afficherTS();
-	for (int i =0;i<indice_tab_expr;i++){
+	afficherTS();
+	/*for (int i =0;i<indice_tab_expr;i++){
 		printf(" %d \t| ",tab_expression[i]);
-	}
+	}*/
     fclose (yyin);
 }

@@ -1,18 +1,20 @@
 Test {
     VAR {
-        %% Declaration de variables
-        INTEGER sarra,a,b,x,n,i;
+        %%Declaration de variables
+        INTEGER sarra,i,soumia;
         FLOAT y;
-        INTEGER tableau[5];
+        INTEGER tableau[ 7 ];
         STRUCT {
-            INTEGER matricule,
+            INTEGER matricul,
             INTEGER moyenne,
         } Etudiant;
         STRUCT Etudiant Sarra,Fatima;
-        CONST Pi = 3.14;  
+        CONST Pi = 3.14 ;  
     }
     CODE {
-        %%Affecation 
-        a = b + 1;    
+        %%hahaha
+        sarra=3230;
+        sarra = 32;
+        y = 0.2;
     }  
 }

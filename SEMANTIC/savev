@@ -145,3 +145,29 @@ int main (){
 	}
     fclose (yyin);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int j=0;
+                    strcpy(val,yytext);
+                    if( val[0] == '-'){
+                        for (int i=1;i<strlen(val);i++) {t[j]= val[i]; j++;}
+                        strcpy(val,t);
+                        yylval.ent = -1*atoi(val);
+                    } else { if( val[0] == '+'){
+                                for (int i=1;i<strlen(val);i++) {t[j]= val[i]; j++;}
+                                strcpy(val,t);
+                                yylval.ent = atoi(val);
+                            } else {yylval.ent = atoi(yytext);}
+                    }
