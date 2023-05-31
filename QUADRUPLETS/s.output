@@ -1,0 +1,1960 @@
+Grammaire
+
+    0 $accept: s $end
+
+    1 s: IDF '{' VAR '{' DECLARATION '}' CODE '{' Instructions '}' '}'
+
+    2 DECLARATION: DECLARATION_Variables ';' DECLARATION
+    3            | DECLARATION_Struct ';' DECLARATION
+    4            | DECLARATION_Struct_Var ';' DECLARATION
+    5            | DECLARATION_Tableau ';' DECLARATION
+    6            | DECLARATION_Const ';' DECLARATION
+    7            | COMMENT DECLARATION
+    8            | /* vide */
+
+    9 DECLARATION_Variables: TYPE liste_idf
+
+   10 liste_idf: IDF ',' liste_idf
+   11          | IDF
+
+   12 DECLARATION_Struct: STRUCT '{' declarStructFields '}' IDF
+
+   13 $@1: /* vide */
+
+   14 DECLARATION_Struct_Var: STRUCT IDF $@1 liste_idf
+
+   15 DECLARATION_Const: CONST IDF AFF literal
+
+   16 DECLARATION_Tableau: TYPE IDF '[' ENTIER ']'
+
+   17 declarStructFields: TYPE IDF ',' declarStructFields
+   18                   | /* vide */
+
+   19 TYPE: INTEGER
+   20     | FLOAT
+
+   21 literal: ENTIER
+   22        | REEL
+
+   23 Instructions: Inst Instructions
+   24             | /* vide */
+
+   25 Inst: Inst_AFF ';'
+   26     | Inst_IF
+   27     | Inst_WHILE
+   28     | Inst_FOR
+   29     | COMMENT
+
+   30 Inst_AFF: IDF AFF expression
+   31         | IDF '[' ENTIER ']' AFF expression
+
+   32 Inst_IF: B ELSE '{' Instructions '}'
+   33        | B
+
+   34 B: A '{' Instructions '}'
+
+   35 A: IF '(' Expression_Condition ')'
+
+   36 Inst_WHILE: WHILE '(' Expression_Condition ')' '{' Instructions '}'
+
+   37 Inst_FOR: FOR '(' Expression_FOR ')' '{' Instructions '}'
+
+   38 Expression_FOR: Init_FOR ':' Pas_FOR ':' Cond_arret
+
+   39 Init_FOR: IDF ':' literal
+
+   40 Pas_FOR: literal
+
+   41 Cond_arret: IDF
+   42           | literal
+
+   43 Expression_Condition: Condition AND Expression_Condition
+   44                     | Condition OR Expression_Condition
+   45                     | Condition
+
+   46 Condition: expression OP_expression expression
+   47          | NOT expression
+
+   48 OP_expression: GREATER
+   49              | LESS
+   50              | EQUAL
+   51              | GREATEREQUAL
+   52              | LESSEQUAL
+   53              | NOTEQUAL
+
+   54 expression: expression ADD expression
+   55           | expression SUB expression
+   56           | expression DIV expression
+   57           | expression MUL expression
+   58           | IDF
+   59           | ENTIER
+   60           | REEL
+   61           | '(' expression ')'
+
+
+Terminaux, suivis des règles où ils apparaissent
+
+$end (0) 0
+'(' (40) 35 36 37 61
+')' (41) 35 36 37 61
+',' (44) 10 17
+':' (58) 38 39
+';' (59) 2 3 4 5 6 25
+'[' (91) 16 31
+']' (93) 16 31
+'{' (123) 1 12 32 34 36 37
+'}' (125) 1 12 32 34 36 37
+error (256)
+ENTIER (258) 16 21 31 59
+REEL (259) 22 60
+IDF (260) 1 10 11 12 14 15 16 17 30 31 39 41 58
+AFF (261) 15 30 31
+CODE (262) 1
+VAR (263) 1
+CONST (264) 15
+STRUCT (265) 12 14
+INTEGER (266) 19
+FLOAT (267) 20
+AND (268) 43
+OR (269) 44
+NOT (270) 47
+GREATER (271) 48
+LESS (272) 49
+GREATEREQUAL (273) 51
+LESSEQUAL (274) 52
+EQUAL (275) 50
+NOTEQUAL (276) 53
+IF (277) 35
+ELSE (278) 32
+WHILE (279) 36
+FOR (280) 37
+COMMENT (281) 7 29
+SUB (282) 55
+ADD (283) 54
+DIV (284) 56
+MUL (285) 57
+
+
+Non-terminaux, suivis des règles où ils apparaissent
+
+$accept (40)
+    à gauche: 0
+s (41)
+    à gauche: 1, à droite: 0
+DECLARATION (42)
+    à gauche: 2 3 4 5 6 7 8, à droite: 1 2 3 4 5 6 7
+DECLARATION_Variables (43)
+    à gauche: 9, à droite: 2
+liste_idf (44)
+    à gauche: 10 11, à droite: 9 10 14
+DECLARATION_Struct (45)
+    à gauche: 12, à droite: 3
+DECLARATION_Struct_Var (46)
+    à gauche: 14, à droite: 4
+$@1 (47)
+    à gauche: 13, à droite: 14
+DECLARATION_Const (48)
+    à gauche: 15, à droite: 6
+DECLARATION_Tableau (49)
+    à gauche: 16, à droite: 5
+declarStructFields (50)
+    à gauche: 17 18, à droite: 12 17
+TYPE (51)
+    à gauche: 19 20, à droite: 9 16 17
+literal (52)
+    à gauche: 21 22, à droite: 15 39 40 42
+Instructions (53)
+    à gauche: 23 24, à droite: 1 23 32 34 36 37
+Inst (54)
+    à gauche: 25 26 27 28 29, à droite: 23
+Inst_AFF (55)
+    à gauche: 30 31, à droite: 25
+Inst_IF (56)
+    à gauche: 32 33, à droite: 26
+B (57)
+    à gauche: 34, à droite: 32 33
+A (58)
+    à gauche: 35, à droite: 34
+Inst_WHILE (59)
+    à gauche: 36, à droite: 27
+Inst_FOR (60)
+    à gauche: 37, à droite: 28
+Expression_FOR (61)
+    à gauche: 38, à droite: 37
+Init_FOR (62)
+    à gauche: 39, à droite: 38
+Pas_FOR (63)
+    à gauche: 40, à droite: 38
+Cond_arret (64)
+    à gauche: 41 42, à droite: 38
+Expression_Condition (65)
+    à gauche: 43 44 45, à droite: 35 36 43 44
+Condition (66)
+    à gauche: 46 47, à droite: 43 44 45
+OP_expression (67)
+    à gauche: 48 49 50 51 52 53, à droite: 46
+expression (68)
+    à gauche: 54 55 56 57 58 59 60 61, à droite: 30 31 46 47 54 55
+    56 57 61
+
+
+état 0
+
+    0 $accept: . s $end
+    1 s: . IDF '{' VAR '{' DECLARATION '}' CODE '{' Instructions '}' '}'
+
+    IDF  décalage et aller à l'état 1
+
+    s  aller à l'état 2
+
+
+état 1
+
+    1 s: IDF . '{' VAR '{' DECLARATION '}' CODE '{' Instructions '}' '}'
+
+    '{'  décalage et aller à l'état 3
+
+
+état 2
+
+    0 $accept: s . $end
+
+    $end  décalage et aller à l'état 4
+
+
+état 3
+
+    1 s: IDF '{' . VAR '{' DECLARATION '}' CODE '{' Instructions '}' '}'
+
+    VAR  décalage et aller à l'état 5
+
+
+état 4
+
+    0 $accept: s $end .
+
+    $défaut  accepter
+
+
+état 5
+
+    1 s: IDF '{' VAR . '{' DECLARATION '}' CODE '{' Instructions '}' '}'
+
+    '{'  décalage et aller à l'état 6
+
+
+état 6
+
+    1 s: IDF '{' VAR '{' . DECLARATION '}' CODE '{' Instructions '}' '}'
+    2 DECLARATION: . DECLARATION_Variables ';' DECLARATION
+    3            | . DECLARATION_Struct ';' DECLARATION
+    4            | . DECLARATION_Struct_Var ';' DECLARATION
+    5            | . DECLARATION_Tableau ';' DECLARATION
+    6            | . DECLARATION_Const ';' DECLARATION
+    7            | . COMMENT DECLARATION
+    8            | .
+    9 DECLARATION_Variables: . TYPE liste_idf
+   12 DECLARATION_Struct: . STRUCT '{' declarStructFields '}' IDF
+   14 DECLARATION_Struct_Var: . STRUCT IDF $@1 liste_idf
+   15 DECLARATION_Const: . CONST IDF AFF literal
+   16 DECLARATION_Tableau: . TYPE IDF '[' ENTIER ']'
+   19 TYPE: . INTEGER
+   20     | . FLOAT
+
+    CONST    décalage et aller à l'état 7
+    STRUCT   décalage et aller à l'état 8
+    INTEGER  décalage et aller à l'état 9
+    FLOAT    décalage et aller à l'état 10
+    COMMENT  décalage et aller à l'état 11
+
+    $défaut  réduction par utilisation de la règle 8 (DECLARATION)
+
+    DECLARATION             aller à l'état 12
+    DECLARATION_Variables   aller à l'état 13
+    DECLARATION_Struct      aller à l'état 14
+    DECLARATION_Struct_Var  aller à l'état 15
+    DECLARATION_Const       aller à l'état 16
+    DECLARATION_Tableau     aller à l'état 17
+    TYPE                    aller à l'état 18
+
+
+état 7
+
+   15 DECLARATION_Const: CONST . IDF AFF literal
+
+    IDF  décalage et aller à l'état 19
+
+
+état 8
+
+   12 DECLARATION_Struct: STRUCT . '{' declarStructFields '}' IDF
+   14 DECLARATION_Struct_Var: STRUCT . IDF $@1 liste_idf
+
+    IDF  décalage et aller à l'état 20
+    '{'  décalage et aller à l'état 21
+
+
+état 9
+
+   19 TYPE: INTEGER .
+
+    $défaut  réduction par utilisation de la règle 19 (TYPE)
+
+
+état 10
+
+   20 TYPE: FLOAT .
+
+    $défaut  réduction par utilisation de la règle 20 (TYPE)
+
+
+état 11
+
+    2 DECLARATION: . DECLARATION_Variables ';' DECLARATION
+    3            | . DECLARATION_Struct ';' DECLARATION
+    4            | . DECLARATION_Struct_Var ';' DECLARATION
+    5            | . DECLARATION_Tableau ';' DECLARATION
+    6            | . DECLARATION_Const ';' DECLARATION
+    7            | . COMMENT DECLARATION
+    7            | COMMENT . DECLARATION
+    8            | .
+    9 DECLARATION_Variables: . TYPE liste_idf
+   12 DECLARATION_Struct: . STRUCT '{' declarStructFields '}' IDF
+   14 DECLARATION_Struct_Var: . STRUCT IDF $@1 liste_idf
+   15 DECLARATION_Const: . CONST IDF AFF literal
+   16 DECLARATION_Tableau: . TYPE IDF '[' ENTIER ']'
+   19 TYPE: . INTEGER
+   20     | . FLOAT
+
+    CONST    décalage et aller à l'état 7
+    STRUCT   décalage et aller à l'état 8
+    INTEGER  décalage et aller à l'état 9
+    FLOAT    décalage et aller à l'état 10
+    COMMENT  décalage et aller à l'état 11
+
+    $défaut  réduction par utilisation de la règle 8 (DECLARATION)
+
+    DECLARATION             aller à l'état 22
+    DECLARATION_Variables   aller à l'état 13
+    DECLARATION_Struct      aller à l'état 14
+    DECLARATION_Struct_Var  aller à l'état 15
+    DECLARATION_Const       aller à l'état 16
+    DECLARATION_Tableau     aller à l'état 17
+    TYPE                    aller à l'état 18
+
+
+état 12
+
+    1 s: IDF '{' VAR '{' DECLARATION . '}' CODE '{' Instructions '}' '}'
+
+    '}'  décalage et aller à l'état 23
+
+
+état 13
+
+    2 DECLARATION: DECLARATION_Variables . ';' DECLARATION
+
+    ';'  décalage et aller à l'état 24
+
+
+état 14
+
+    3 DECLARATION: DECLARATION_Struct . ';' DECLARATION
+
+    ';'  décalage et aller à l'état 25
+
+
+état 15
+
+    4 DECLARATION: DECLARATION_Struct_Var . ';' DECLARATION
+
+    ';'  décalage et aller à l'état 26
+
+
+état 16
+
+    6 DECLARATION: DECLARATION_Const . ';' DECLARATION
+
+    ';'  décalage et aller à l'état 27
+
+
+état 17
+
+    5 DECLARATION: DECLARATION_Tableau . ';' DECLARATION
+
+    ';'  décalage et aller à l'état 28
+
+
+état 18
+
+    9 DECLARATION_Variables: TYPE . liste_idf
+   10 liste_idf: . IDF ',' liste_idf
+   11          | . IDF
+   16 DECLARATION_Tableau: TYPE . IDF '[' ENTIER ']'
+
+    IDF  décalage et aller à l'état 29
+
+    liste_idf  aller à l'état 30
+
+
+état 19
+
+   15 DECLARATION_Const: CONST IDF . AFF literal
+
+    AFF  décalage et aller à l'état 31
+
+
+état 20
+
+   13 $@1: .
+   14 DECLARATION_Struct_Var: STRUCT IDF . $@1 liste_idf
+
+    $défaut  réduction par utilisation de la règle 13 ($@1)
+
+    $@1  aller à l'état 32
+
+
+état 21
+
+   12 DECLARATION_Struct: STRUCT '{' . declarStructFields '}' IDF
+   17 declarStructFields: . TYPE IDF ',' declarStructFields
+   18                   | .
+   19 TYPE: . INTEGER
+   20     | . FLOAT
+
+    INTEGER  décalage et aller à l'état 9
+    FLOAT    décalage et aller à l'état 10
+
+    $défaut  réduction par utilisation de la règle 18 (declarStructFields)
+
+    declarStructFields  aller à l'état 33
+    TYPE                aller à l'état 34
+
+
+état 22
+
+    7 DECLARATION: COMMENT DECLARATION .
+
+    $défaut  réduction par utilisation de la règle 7 (DECLARATION)
+
+
+état 23
+
+    1 s: IDF '{' VAR '{' DECLARATION '}' . CODE '{' Instructions '}' '}'
+
+    CODE  décalage et aller à l'état 35
+
+
+état 24
+
+    2 DECLARATION: . DECLARATION_Variables ';' DECLARATION
+    2            | DECLARATION_Variables ';' . DECLARATION
+    3            | . DECLARATION_Struct ';' DECLARATION
+    4            | . DECLARATION_Struct_Var ';' DECLARATION
+    5            | . DECLARATION_Tableau ';' DECLARATION
+    6            | . DECLARATION_Const ';' DECLARATION
+    7            | . COMMENT DECLARATION
+    8            | .
+    9 DECLARATION_Variables: . TYPE liste_idf
+   12 DECLARATION_Struct: . STRUCT '{' declarStructFields '}' IDF
+   14 DECLARATION_Struct_Var: . STRUCT IDF $@1 liste_idf
+   15 DECLARATION_Const: . CONST IDF AFF literal
+   16 DECLARATION_Tableau: . TYPE IDF '[' ENTIER ']'
+   19 TYPE: . INTEGER
+   20     | . FLOAT
+
+    CONST    décalage et aller à l'état 7
+    STRUCT   décalage et aller à l'état 8
+    INTEGER  décalage et aller à l'état 9
+    FLOAT    décalage et aller à l'état 10
+    COMMENT  décalage et aller à l'état 11
+
+    $défaut  réduction par utilisation de la règle 8 (DECLARATION)
+
+    DECLARATION             aller à l'état 36
+    DECLARATION_Variables   aller à l'état 13
+    DECLARATION_Struct      aller à l'état 14
+    DECLARATION_Struct_Var  aller à l'état 15
+    DECLARATION_Const       aller à l'état 16
+    DECLARATION_Tableau     aller à l'état 17
+    TYPE                    aller à l'état 18
+
+
+état 25
+
+    2 DECLARATION: . DECLARATION_Variables ';' DECLARATION
+    3            | . DECLARATION_Struct ';' DECLARATION
+    3            | DECLARATION_Struct ';' . DECLARATION
+    4            | . DECLARATION_Struct_Var ';' DECLARATION
+    5            | . DECLARATION_Tableau ';' DECLARATION
+    6            | . DECLARATION_Const ';' DECLARATION
+    7            | . COMMENT DECLARATION
+    8            | .
+    9 DECLARATION_Variables: . TYPE liste_idf
+   12 DECLARATION_Struct: . STRUCT '{' declarStructFields '}' IDF
+   14 DECLARATION_Struct_Var: . STRUCT IDF $@1 liste_idf
+   15 DECLARATION_Const: . CONST IDF AFF literal
+   16 DECLARATION_Tableau: . TYPE IDF '[' ENTIER ']'
+   19 TYPE: . INTEGER
+   20     | . FLOAT
+
+    CONST    décalage et aller à l'état 7
+    STRUCT   décalage et aller à l'état 8
+    INTEGER  décalage et aller à l'état 9
+    FLOAT    décalage et aller à l'état 10
+    COMMENT  décalage et aller à l'état 11
+
+    $défaut  réduction par utilisation de la règle 8 (DECLARATION)
+
+    DECLARATION             aller à l'état 37
+    DECLARATION_Variables   aller à l'état 13
+    DECLARATION_Struct      aller à l'état 14
+    DECLARATION_Struct_Var  aller à l'état 15
+    DECLARATION_Const       aller à l'état 16
+    DECLARATION_Tableau     aller à l'état 17
+    TYPE                    aller à l'état 18
+
+
+état 26
+
+    2 DECLARATION: . DECLARATION_Variables ';' DECLARATION
+    3            | . DECLARATION_Struct ';' DECLARATION
+    4            | . DECLARATION_Struct_Var ';' DECLARATION
+    4            | DECLARATION_Struct_Var ';' . DECLARATION
+    5            | . DECLARATION_Tableau ';' DECLARATION
+    6            | . DECLARATION_Const ';' DECLARATION
+    7            | . COMMENT DECLARATION
+    8            | .
+    9 DECLARATION_Variables: . TYPE liste_idf
+   12 DECLARATION_Struct: . STRUCT '{' declarStructFields '}' IDF
+   14 DECLARATION_Struct_Var: . STRUCT IDF $@1 liste_idf
+   15 DECLARATION_Const: . CONST IDF AFF literal
+   16 DECLARATION_Tableau: . TYPE IDF '[' ENTIER ']'
+   19 TYPE: . INTEGER
+   20     | . FLOAT
+
+    CONST    décalage et aller à l'état 7
+    STRUCT   décalage et aller à l'état 8
+    INTEGER  décalage et aller à l'état 9
+    FLOAT    décalage et aller à l'état 10
+    COMMENT  décalage et aller à l'état 11
+
+    $défaut  réduction par utilisation de la règle 8 (DECLARATION)
+
+    DECLARATION             aller à l'état 38
+    DECLARATION_Variables   aller à l'état 13
+    DECLARATION_Struct      aller à l'état 14
+    DECLARATION_Struct_Var  aller à l'état 15
+    DECLARATION_Const       aller à l'état 16
+    DECLARATION_Tableau     aller à l'état 17
+    TYPE                    aller à l'état 18
+
+
+état 27
+
+    2 DECLARATION: . DECLARATION_Variables ';' DECLARATION
+    3            | . DECLARATION_Struct ';' DECLARATION
+    4            | . DECLARATION_Struct_Var ';' DECLARATION
+    5            | . DECLARATION_Tableau ';' DECLARATION
+    6            | . DECLARATION_Const ';' DECLARATION
+    6            | DECLARATION_Const ';' . DECLARATION
+    7            | . COMMENT DECLARATION
+    8            | .
+    9 DECLARATION_Variables: . TYPE liste_idf
+   12 DECLARATION_Struct: . STRUCT '{' declarStructFields '}' IDF
+   14 DECLARATION_Struct_Var: . STRUCT IDF $@1 liste_idf
+   15 DECLARATION_Const: . CONST IDF AFF literal
+   16 DECLARATION_Tableau: . TYPE IDF '[' ENTIER ']'
+   19 TYPE: . INTEGER
+   20     | . FLOAT
+
+    CONST    décalage et aller à l'état 7
+    STRUCT   décalage et aller à l'état 8
+    INTEGER  décalage et aller à l'état 9
+    FLOAT    décalage et aller à l'état 10
+    COMMENT  décalage et aller à l'état 11
+
+    $défaut  réduction par utilisation de la règle 8 (DECLARATION)
+
+    DECLARATION             aller à l'état 39
+    DECLARATION_Variables   aller à l'état 13
+    DECLARATION_Struct      aller à l'état 14
+    DECLARATION_Struct_Var  aller à l'état 15
+    DECLARATION_Const       aller à l'état 16
+    DECLARATION_Tableau     aller à l'état 17
+    TYPE                    aller à l'état 18
+
+
+état 28
+
+    2 DECLARATION: . DECLARATION_Variables ';' DECLARATION
+    3            | . DECLARATION_Struct ';' DECLARATION
+    4            | . DECLARATION_Struct_Var ';' DECLARATION
+    5            | . DECLARATION_Tableau ';' DECLARATION
+    5            | DECLARATION_Tableau ';' . DECLARATION
+    6            | . DECLARATION_Const ';' DECLARATION
+    7            | . COMMENT DECLARATION
+    8            | .
+    9 DECLARATION_Variables: . TYPE liste_idf
+   12 DECLARATION_Struct: . STRUCT '{' declarStructFields '}' IDF
+   14 DECLARATION_Struct_Var: . STRUCT IDF $@1 liste_idf
+   15 DECLARATION_Const: . CONST IDF AFF literal
+   16 DECLARATION_Tableau: . TYPE IDF '[' ENTIER ']'
+   19 TYPE: . INTEGER
+   20     | . FLOAT
+
+    CONST    décalage et aller à l'état 7
+    STRUCT   décalage et aller à l'état 8
+    INTEGER  décalage et aller à l'état 9
+    FLOAT    décalage et aller à l'état 10
+    COMMENT  décalage et aller à l'état 11
+
+    $défaut  réduction par utilisation de la règle 8 (DECLARATION)
+
+    DECLARATION             aller à l'état 40
+    DECLARATION_Variables   aller à l'état 13
+    DECLARATION_Struct      aller à l'état 14
+    DECLARATION_Struct_Var  aller à l'état 15
+    DECLARATION_Const       aller à l'état 16
+    DECLARATION_Tableau     aller à l'état 17
+    TYPE                    aller à l'état 18
+
+
+état 29
+
+   10 liste_idf: IDF . ',' liste_idf
+   11          | IDF .
+   16 DECLARATION_Tableau: TYPE IDF . '[' ENTIER ']'
+
+    ','  décalage et aller à l'état 41
+    '['  décalage et aller à l'état 42
+
+    $défaut  réduction par utilisation de la règle 11 (liste_idf)
+
+
+état 30
+
+    9 DECLARATION_Variables: TYPE liste_idf .
+
+    $défaut  réduction par utilisation de la règle 9 (DECLARATION_Variables)
+
+
+état 31
+
+   15 DECLARATION_Const: CONST IDF AFF . literal
+   21 literal: . ENTIER
+   22        | . REEL
+
+    ENTIER  décalage et aller à l'état 43
+    REEL    décalage et aller à l'état 44
+
+    literal  aller à l'état 45
+
+
+état 32
+
+   10 liste_idf: . IDF ',' liste_idf
+   11          | . IDF
+   14 DECLARATION_Struct_Var: STRUCT IDF $@1 . liste_idf
+
+    IDF  décalage et aller à l'état 46
+
+    liste_idf  aller à l'état 47
+
+
+état 33
+
+   12 DECLARATION_Struct: STRUCT '{' declarStructFields . '}' IDF
+
+    '}'  décalage et aller à l'état 48
+
+
+état 34
+
+   17 declarStructFields: TYPE . IDF ',' declarStructFields
+
+    IDF  décalage et aller à l'état 49
+
+
+état 35
+
+    1 s: IDF '{' VAR '{' DECLARATION '}' CODE . '{' Instructions '}' '}'
+
+    '{'  décalage et aller à l'état 50
+
+
+état 36
+
+    2 DECLARATION: DECLARATION_Variables ';' DECLARATION .
+
+    $défaut  réduction par utilisation de la règle 2 (DECLARATION)
+
+
+état 37
+
+    3 DECLARATION: DECLARATION_Struct ';' DECLARATION .
+
+    $défaut  réduction par utilisation de la règle 3 (DECLARATION)
+
+
+état 38
+
+    4 DECLARATION: DECLARATION_Struct_Var ';' DECLARATION .
+
+    $défaut  réduction par utilisation de la règle 4 (DECLARATION)
+
+
+état 39
+
+    6 DECLARATION: DECLARATION_Const ';' DECLARATION .
+
+    $défaut  réduction par utilisation de la règle 6 (DECLARATION)
+
+
+état 40
+
+    5 DECLARATION: DECLARATION_Tableau ';' DECLARATION .
+
+    $défaut  réduction par utilisation de la règle 5 (DECLARATION)
+
+
+état 41
+
+   10 liste_idf: . IDF ',' liste_idf
+   10          | IDF ',' . liste_idf
+   11          | . IDF
+
+    IDF  décalage et aller à l'état 46
+
+    liste_idf  aller à l'état 51
+
+
+état 42
+
+   16 DECLARATION_Tableau: TYPE IDF '[' . ENTIER ']'
+
+    ENTIER  décalage et aller à l'état 52
+
+
+état 43
+
+   21 literal: ENTIER .
+
+    $défaut  réduction par utilisation de la règle 21 (literal)
+
+
+état 44
+
+   22 literal: REEL .
+
+    $défaut  réduction par utilisation de la règle 22 (literal)
+
+
+état 45
+
+   15 DECLARATION_Const: CONST IDF AFF literal .
+
+    $défaut  réduction par utilisation de la règle 15 (DECLARATION_Const)
+
+
+état 46
+
+   10 liste_idf: IDF . ',' liste_idf
+   11          | IDF .
+
+    ','  décalage et aller à l'état 41
+
+    $défaut  réduction par utilisation de la règle 11 (liste_idf)
+
+
+état 47
+
+   14 DECLARATION_Struct_Var: STRUCT IDF $@1 liste_idf .
+
+    $défaut  réduction par utilisation de la règle 14 (DECLARATION_Struct_Var)
+
+
+état 48
+
+   12 DECLARATION_Struct: STRUCT '{' declarStructFields '}' . IDF
+
+    IDF  décalage et aller à l'état 53
+
+
+état 49
+
+   17 declarStructFields: TYPE IDF . ',' declarStructFields
+
+    ','  décalage et aller à l'état 54
+
+
+état 50
+
+    1 s: IDF '{' VAR '{' DECLARATION '}' CODE '{' . Instructions '}' '}'
+   23 Instructions: . Inst Instructions
+   24             | .
+   25 Inst: . Inst_AFF ';'
+   26     | . Inst_IF
+   27     | . Inst_WHILE
+   28     | . Inst_FOR
+   29     | . COMMENT
+   30 Inst_AFF: . IDF AFF expression
+   31         | . IDF '[' ENTIER ']' AFF expression
+   32 Inst_IF: . B ELSE '{' Instructions '}'
+   33        | . B
+   34 B: . A '{' Instructions '}'
+   35 A: . IF '(' Expression_Condition ')'
+   36 Inst_WHILE: . WHILE '(' Expression_Condition ')' '{' Instructions '}'
+   37 Inst_FOR: . FOR '(' Expression_FOR ')' '{' Instructions '}'
+
+    IDF      décalage et aller à l'état 55
+    IF       décalage et aller à l'état 56
+    WHILE    décalage et aller à l'état 57
+    FOR      décalage et aller à l'état 58
+    COMMENT  décalage et aller à l'état 59
+
+    $défaut  réduction par utilisation de la règle 24 (Instructions)
+
+    Instructions  aller à l'état 60
+    Inst          aller à l'état 61
+    Inst_AFF      aller à l'état 62
+    Inst_IF       aller à l'état 63
+    B             aller à l'état 64
+    A             aller à l'état 65
+    Inst_WHILE    aller à l'état 66
+    Inst_FOR      aller à l'état 67
+
+
+état 51
+
+   10 liste_idf: IDF ',' liste_idf .
+
+    $défaut  réduction par utilisation de la règle 10 (liste_idf)
+
+
+état 52
+
+   16 DECLARATION_Tableau: TYPE IDF '[' ENTIER . ']'
+
+    ']'  décalage et aller à l'état 68
+
+
+état 53
+
+   12 DECLARATION_Struct: STRUCT '{' declarStructFields '}' IDF .
+
+    $défaut  réduction par utilisation de la règle 12 (DECLARATION_Struct)
+
+
+état 54
+
+   17 declarStructFields: . TYPE IDF ',' declarStructFields
+   17                   | TYPE IDF ',' . declarStructFields
+   18                   | .
+   19 TYPE: . INTEGER
+   20     | . FLOAT
+
+    INTEGER  décalage et aller à l'état 9
+    FLOAT    décalage et aller à l'état 10
+
+    $défaut  réduction par utilisation de la règle 18 (declarStructFields)
+
+    declarStructFields  aller à l'état 69
+    TYPE                aller à l'état 34
+
+
+état 55
+
+   30 Inst_AFF: IDF . AFF expression
+   31         | IDF . '[' ENTIER ']' AFF expression
+
+    AFF  décalage et aller à l'état 70
+    '['  décalage et aller à l'état 71
+
+
+état 56
+
+   35 A: IF . '(' Expression_Condition ')'
+
+    '('  décalage et aller à l'état 72
+
+
+état 57
+
+   36 Inst_WHILE: WHILE . '(' Expression_Condition ')' '{' Instructions '}'
+
+    '('  décalage et aller à l'état 73
+
+
+état 58
+
+   37 Inst_FOR: FOR . '(' Expression_FOR ')' '{' Instructions '}'
+
+    '('  décalage et aller à l'état 74
+
+
+état 59
+
+   29 Inst: COMMENT .
+
+    $défaut  réduction par utilisation de la règle 29 (Inst)
+
+
+état 60
+
+    1 s: IDF '{' VAR '{' DECLARATION '}' CODE '{' Instructions . '}' '}'
+
+    '}'  décalage et aller à l'état 75
+
+
+état 61
+
+   23 Instructions: . Inst Instructions
+   23             | Inst . Instructions
+   24             | .
+   25 Inst: . Inst_AFF ';'
+   26     | . Inst_IF
+   27     | . Inst_WHILE
+   28     | . Inst_FOR
+   29     | . COMMENT
+   30 Inst_AFF: . IDF AFF expression
+   31         | . IDF '[' ENTIER ']' AFF expression
+   32 Inst_IF: . B ELSE '{' Instructions '}'
+   33        | . B
+   34 B: . A '{' Instructions '}'
+   35 A: . IF '(' Expression_Condition ')'
+   36 Inst_WHILE: . WHILE '(' Expression_Condition ')' '{' Instructions '}'
+   37 Inst_FOR: . FOR '(' Expression_FOR ')' '{' Instructions '}'
+
+    IDF      décalage et aller à l'état 55
+    IF       décalage et aller à l'état 56
+    WHILE    décalage et aller à l'état 57
+    FOR      décalage et aller à l'état 58
+    COMMENT  décalage et aller à l'état 59
+
+    $défaut  réduction par utilisation de la règle 24 (Instructions)
+
+    Instructions  aller à l'état 76
+    Inst          aller à l'état 61
+    Inst_AFF      aller à l'état 62
+    Inst_IF       aller à l'état 63
+    B             aller à l'état 64
+    A             aller à l'état 65
+    Inst_WHILE    aller à l'état 66
+    Inst_FOR      aller à l'état 67
+
+
+état 62
+
+   25 Inst: Inst_AFF . ';'
+
+    ';'  décalage et aller à l'état 77
+
+
+état 63
+
+   26 Inst: Inst_IF .
+
+    $défaut  réduction par utilisation de la règle 26 (Inst)
+
+
+état 64
+
+   32 Inst_IF: B . ELSE '{' Instructions '}'
+   33        | B .
+
+    ELSE  décalage et aller à l'état 78
+
+    $défaut  réduction par utilisation de la règle 33 (Inst_IF)
+
+
+état 65
+
+   34 B: A . '{' Instructions '}'
+
+    '{'  décalage et aller à l'état 79
+
+
+état 66
+
+   27 Inst: Inst_WHILE .
+
+    $défaut  réduction par utilisation de la règle 27 (Inst)
+
+
+état 67
+
+   28 Inst: Inst_FOR .
+
+    $défaut  réduction par utilisation de la règle 28 (Inst)
+
+
+état 68
+
+   16 DECLARATION_Tableau: TYPE IDF '[' ENTIER ']' .
+
+    $défaut  réduction par utilisation de la règle 16 (DECLARATION_Tableau)
+
+
+état 69
+
+   17 declarStructFields: TYPE IDF ',' declarStructFields .
+
+    $défaut  réduction par utilisation de la règle 17 (declarStructFields)
+
+
+état 70
+
+   30 Inst_AFF: IDF AFF . expression
+   54 expression: . expression ADD expression
+   55           | . expression SUB expression
+   56           | . expression DIV expression
+   57           | . expression MUL expression
+   58           | . IDF
+   59           | . ENTIER
+   60           | . REEL
+   61           | . '(' expression ')'
+
+    ENTIER  décalage et aller à l'état 80
+    REEL    décalage et aller à l'état 81
+    IDF     décalage et aller à l'état 82
+    '('     décalage et aller à l'état 83
+
+    expression  aller à l'état 84
+
+
+état 71
+
+   31 Inst_AFF: IDF '[' . ENTIER ']' AFF expression
+
+    ENTIER  décalage et aller à l'état 85
+
+
+état 72
+
+   35 A: IF '(' . Expression_Condition ')'
+   43 Expression_Condition: . Condition AND Expression_Condition
+   44                     | . Condition OR Expression_Condition
+   45                     | . Condition
+   46 Condition: . expression OP_expression expression
+   47          | . NOT expression
+   54 expression: . expression ADD expression
+   55           | . expression SUB expression
+   56           | . expression DIV expression
+   57           | . expression MUL expression
+   58           | . IDF
+   59           | . ENTIER
+   60           | . REEL
+   61           | . '(' expression ')'
+
+    ENTIER  décalage et aller à l'état 80
+    REEL    décalage et aller à l'état 81
+    IDF     décalage et aller à l'état 82
+    '('     décalage et aller à l'état 83
+    NOT     décalage et aller à l'état 86
+
+    Expression_Condition  aller à l'état 87
+    Condition             aller à l'état 88
+    expression            aller à l'état 89
+
+
+état 73
+
+   36 Inst_WHILE: WHILE '(' . Expression_Condition ')' '{' Instructions '}'
+   43 Expression_Condition: . Condition AND Expression_Condition
+   44                     | . Condition OR Expression_Condition
+   45                     | . Condition
+   46 Condition: . expression OP_expression expression
+   47          | . NOT expression
+   54 expression: . expression ADD expression
+   55           | . expression SUB expression
+   56           | . expression DIV expression
+   57           | . expression MUL expression
+   58           | . IDF
+   59           | . ENTIER
+   60           | . REEL
+   61           | . '(' expression ')'
+
+    ENTIER  décalage et aller à l'état 80
+    REEL    décalage et aller à l'état 81
+    IDF     décalage et aller à l'état 82
+    '('     décalage et aller à l'état 83
+    NOT     décalage et aller à l'état 86
+
+    Expression_Condition  aller à l'état 90
+    Condition             aller à l'état 88
+    expression            aller à l'état 89
+
+
+état 74
+
+   37 Inst_FOR: FOR '(' . Expression_FOR ')' '{' Instructions '}'
+   38 Expression_FOR: . Init_FOR ':' Pas_FOR ':' Cond_arret
+   39 Init_FOR: . IDF ':' literal
+
+    IDF  décalage et aller à l'état 91
+
+    Expression_FOR  aller à l'état 92
+    Init_FOR        aller à l'état 93
+
+
+état 75
+
+    1 s: IDF '{' VAR '{' DECLARATION '}' CODE '{' Instructions '}' . '}'
+
+    '}'  décalage et aller à l'état 94
+
+
+état 76
+
+   23 Instructions: Inst Instructions .
+
+    $défaut  réduction par utilisation de la règle 23 (Instructions)
+
+
+état 77
+
+   25 Inst: Inst_AFF ';' .
+
+    $défaut  réduction par utilisation de la règle 25 (Inst)
+
+
+état 78
+
+   32 Inst_IF: B ELSE . '{' Instructions '}'
+
+    '{'  décalage et aller à l'état 95
+
+
+état 79
+
+   23 Instructions: . Inst Instructions
+   24             | .
+   25 Inst: . Inst_AFF ';'
+   26     | . Inst_IF
+   27     | . Inst_WHILE
+   28     | . Inst_FOR
+   29     | . COMMENT
+   30 Inst_AFF: . IDF AFF expression
+   31         | . IDF '[' ENTIER ']' AFF expression
+   32 Inst_IF: . B ELSE '{' Instructions '}'
+   33        | . B
+   34 B: . A '{' Instructions '}'
+   34  | A '{' . Instructions '}'
+   35 A: . IF '(' Expression_Condition ')'
+   36 Inst_WHILE: . WHILE '(' Expression_Condition ')' '{' Instructions '}'
+   37 Inst_FOR: . FOR '(' Expression_FOR ')' '{' Instructions '}'
+
+    IDF      décalage et aller à l'état 55
+    IF       décalage et aller à l'état 56
+    WHILE    décalage et aller à l'état 57
+    FOR      décalage et aller à l'état 58
+    COMMENT  décalage et aller à l'état 59
+
+    $défaut  réduction par utilisation de la règle 24 (Instructions)
+
+    Instructions  aller à l'état 96
+    Inst          aller à l'état 61
+    Inst_AFF      aller à l'état 62
+    Inst_IF       aller à l'état 63
+    B             aller à l'état 64
+    A             aller à l'état 65
+    Inst_WHILE    aller à l'état 66
+    Inst_FOR      aller à l'état 67
+
+
+état 80
+
+   59 expression: ENTIER .
+
+    $défaut  réduction par utilisation de la règle 59 (expression)
+
+
+état 81
+
+   60 expression: REEL .
+
+    $défaut  réduction par utilisation de la règle 60 (expression)
+
+
+état 82
+
+   58 expression: IDF .
+
+    $défaut  réduction par utilisation de la règle 58 (expression)
+
+
+état 83
+
+   54 expression: . expression ADD expression
+   55           | . expression SUB expression
+   56           | . expression DIV expression
+   57           | . expression MUL expression
+   58           | . IDF
+   59           | . ENTIER
+   60           | . REEL
+   61           | . '(' expression ')'
+   61           | '(' . expression ')'
+
+    ENTIER  décalage et aller à l'état 80
+    REEL    décalage et aller à l'état 81
+    IDF     décalage et aller à l'état 82
+    '('     décalage et aller à l'état 83
+
+    expression  aller à l'état 97
+
+
+état 84
+
+   30 Inst_AFF: IDF AFF expression .
+   54 expression: expression . ADD expression
+   55           | expression . SUB expression
+   56           | expression . DIV expression
+   57           | expression . MUL expression
+
+    SUB  décalage et aller à l'état 98
+    ADD  décalage et aller à l'état 99
+    DIV  décalage et aller à l'état 100
+    MUL  décalage et aller à l'état 101
+
+    $défaut  réduction par utilisation de la règle 30 (Inst_AFF)
+
+
+état 85
+
+   31 Inst_AFF: IDF '[' ENTIER . ']' AFF expression
+
+    ']'  décalage et aller à l'état 102
+
+
+état 86
+
+   47 Condition: NOT . expression
+   54 expression: . expression ADD expression
+   55           | . expression SUB expression
+   56           | . expression DIV expression
+   57           | . expression MUL expression
+   58           | . IDF
+   59           | . ENTIER
+   60           | . REEL
+   61           | . '(' expression ')'
+
+    ENTIER  décalage et aller à l'état 80
+    REEL    décalage et aller à l'état 81
+    IDF     décalage et aller à l'état 82
+    '('     décalage et aller à l'état 83
+
+    expression  aller à l'état 103
+
+
+état 87
+
+   35 A: IF '(' Expression_Condition . ')'
+
+    ')'  décalage et aller à l'état 104
+
+
+état 88
+
+   43 Expression_Condition: Condition . AND Expression_Condition
+   44                     | Condition . OR Expression_Condition
+   45                     | Condition .
+
+    AND  décalage et aller à l'état 105
+    OR   décalage et aller à l'état 106
+
+    $défaut  réduction par utilisation de la règle 45 (Expression_Condition)
+
+
+état 89
+
+   46 Condition: expression . OP_expression expression
+   48 OP_expression: . GREATER
+   49              | . LESS
+   50              | . EQUAL
+   51              | . GREATEREQUAL
+   52              | . LESSEQUAL
+   53              | . NOTEQUAL
+   54 expression: expression . ADD expression
+   55           | expression . SUB expression
+   56           | expression . DIV expression
+   57           | expression . MUL expression
+
+    GREATER       décalage et aller à l'état 107
+    LESS          décalage et aller à l'état 108
+    GREATEREQUAL  décalage et aller à l'état 109
+    LESSEQUAL     décalage et aller à l'état 110
+    EQUAL         décalage et aller à l'état 111
+    NOTEQUAL      décalage et aller à l'état 112
+    SUB           décalage et aller à l'état 98
+    ADD           décalage et aller à l'état 99
+    DIV           décalage et aller à l'état 100
+    MUL           décalage et aller à l'état 101
+
+    OP_expression  aller à l'état 113
+
+
+état 90
+
+   36 Inst_WHILE: WHILE '(' Expression_Condition . ')' '{' Instructions '}'
+
+    ')'  décalage et aller à l'état 114
+
+
+état 91
+
+   39 Init_FOR: IDF . ':' literal
+
+    ':'  décalage et aller à l'état 115
+
+
+état 92
+
+   37 Inst_FOR: FOR '(' Expression_FOR . ')' '{' Instructions '}'
+
+    ')'  décalage et aller à l'état 116
+
+
+état 93
+
+   38 Expression_FOR: Init_FOR . ':' Pas_FOR ':' Cond_arret
+
+    ':'  décalage et aller à l'état 117
+
+
+état 94
+
+    1 s: IDF '{' VAR '{' DECLARATION '}' CODE '{' Instructions '}' '}' .
+
+    $défaut  réduction par utilisation de la règle 1 (s)
+
+
+état 95
+
+   23 Instructions: . Inst Instructions
+   24             | .
+   25 Inst: . Inst_AFF ';'
+   26     | . Inst_IF
+   27     | . Inst_WHILE
+   28     | . Inst_FOR
+   29     | . COMMENT
+   30 Inst_AFF: . IDF AFF expression
+   31         | . IDF '[' ENTIER ']' AFF expression
+   32 Inst_IF: . B ELSE '{' Instructions '}'
+   32        | B ELSE '{' . Instructions '}'
+   33        | . B
+   34 B: . A '{' Instructions '}'
+   35 A: . IF '(' Expression_Condition ')'
+   36 Inst_WHILE: . WHILE '(' Expression_Condition ')' '{' Instructions '}'
+   37 Inst_FOR: . FOR '(' Expression_FOR ')' '{' Instructions '}'
+
+    IDF      décalage et aller à l'état 55
+    IF       décalage et aller à l'état 56
+    WHILE    décalage et aller à l'état 57
+    FOR      décalage et aller à l'état 58
+    COMMENT  décalage et aller à l'état 59
+
+    $défaut  réduction par utilisation de la règle 24 (Instructions)
+
+    Instructions  aller à l'état 118
+    Inst          aller à l'état 61
+    Inst_AFF      aller à l'état 62
+    Inst_IF       aller à l'état 63
+    B             aller à l'état 64
+    A             aller à l'état 65
+    Inst_WHILE    aller à l'état 66
+    Inst_FOR      aller à l'état 67
+
+
+état 96
+
+   34 B: A '{' Instructions . '}'
+
+    '}'  décalage et aller à l'état 119
+
+
+état 97
+
+   54 expression: expression . ADD expression
+   55           | expression . SUB expression
+   56           | expression . DIV expression
+   57           | expression . MUL expression
+   61           | '(' expression . ')'
+
+    ')'  décalage et aller à l'état 120
+    SUB  décalage et aller à l'état 98
+    ADD  décalage et aller à l'état 99
+    DIV  décalage et aller à l'état 100
+    MUL  décalage et aller à l'état 101
+
+
+état 98
+
+   54 expression: . expression ADD expression
+   55           | . expression SUB expression
+   55           | expression SUB . expression
+   56           | . expression DIV expression
+   57           | . expression MUL expression
+   58           | . IDF
+   59           | . ENTIER
+   60           | . REEL
+   61           | . '(' expression ')'
+
+    ENTIER  décalage et aller à l'état 80
+    REEL    décalage et aller à l'état 81
+    IDF     décalage et aller à l'état 82
+    '('     décalage et aller à l'état 83
+
+    expression  aller à l'état 121
+
+
+état 99
+
+   54 expression: . expression ADD expression
+   54           | expression ADD . expression
+   55           | . expression SUB expression
+   56           | . expression DIV expression
+   57           | . expression MUL expression
+   58           | . IDF
+   59           | . ENTIER
+   60           | . REEL
+   61           | . '(' expression ')'
+
+    ENTIER  décalage et aller à l'état 80
+    REEL    décalage et aller à l'état 81
+    IDF     décalage et aller à l'état 82
+    '('     décalage et aller à l'état 83
+
+    expression  aller à l'état 122
+
+
+état 100
+
+   54 expression: . expression ADD expression
+   55           | . expression SUB expression
+   56           | . expression DIV expression
+   56           | expression DIV . expression
+   57           | . expression MUL expression
+   58           | . IDF
+   59           | . ENTIER
+   60           | . REEL
+   61           | . '(' expression ')'
+
+    ENTIER  décalage et aller à l'état 80
+    REEL    décalage et aller à l'état 81
+    IDF     décalage et aller à l'état 82
+    '('     décalage et aller à l'état 83
+
+    expression  aller à l'état 123
+
+
+état 101
+
+   54 expression: . expression ADD expression
+   55           | . expression SUB expression
+   56           | . expression DIV expression
+   57           | . expression MUL expression
+   57           | expression MUL . expression
+   58           | . IDF
+   59           | . ENTIER
+   60           | . REEL
+   61           | . '(' expression ')'
+
+    ENTIER  décalage et aller à l'état 80
+    REEL    décalage et aller à l'état 81
+    IDF     décalage et aller à l'état 82
+    '('     décalage et aller à l'état 83
+
+    expression  aller à l'état 124
+
+
+état 102
+
+   31 Inst_AFF: IDF '[' ENTIER ']' . AFF expression
+
+    AFF  décalage et aller à l'état 125
+
+
+état 103
+
+   47 Condition: NOT expression .
+   54 expression: expression . ADD expression
+   55           | expression . SUB expression
+   56           | expression . DIV expression
+   57           | expression . MUL expression
+
+    SUB  décalage et aller à l'état 98
+    ADD  décalage et aller à l'état 99
+    DIV  décalage et aller à l'état 100
+    MUL  décalage et aller à l'état 101
+
+    $défaut  réduction par utilisation de la règle 47 (Condition)
+
+
+état 104
+
+   35 A: IF '(' Expression_Condition ')' .
+
+    $défaut  réduction par utilisation de la règle 35 (A)
+
+
+état 105
+
+   43 Expression_Condition: . Condition AND Expression_Condition
+   43                     | Condition AND . Expression_Condition
+   44                     | . Condition OR Expression_Condition
+   45                     | . Condition
+   46 Condition: . expression OP_expression expression
+   47          | . NOT expression
+   54 expression: . expression ADD expression
+   55           | . expression SUB expression
+   56           | . expression DIV expression
+   57           | . expression MUL expression
+   58           | . IDF
+   59           | . ENTIER
+   60           | . REEL
+   61           | . '(' expression ')'
+
+    ENTIER  décalage et aller à l'état 80
+    REEL    décalage et aller à l'état 81
+    IDF     décalage et aller à l'état 82
+    '('     décalage et aller à l'état 83
+    NOT     décalage et aller à l'état 86
+
+    Expression_Condition  aller à l'état 126
+    Condition             aller à l'état 88
+    expression            aller à l'état 89
+
+
+état 106
+
+   43 Expression_Condition: . Condition AND Expression_Condition
+   44                     | . Condition OR Expression_Condition
+   44                     | Condition OR . Expression_Condition
+   45                     | . Condition
+   46 Condition: . expression OP_expression expression
+   47          | . NOT expression
+   54 expression: . expression ADD expression
+   55           | . expression SUB expression
+   56           | . expression DIV expression
+   57           | . expression MUL expression
+   58           | . IDF
+   59           | . ENTIER
+   60           | . REEL
+   61           | . '(' expression ')'
+
+    ENTIER  décalage et aller à l'état 80
+    REEL    décalage et aller à l'état 81
+    IDF     décalage et aller à l'état 82
+    '('     décalage et aller à l'état 83
+    NOT     décalage et aller à l'état 86
+
+    Expression_Condition  aller à l'état 127
+    Condition             aller à l'état 88
+    expression            aller à l'état 89
+
+
+état 107
+
+   48 OP_expression: GREATER .
+
+    $défaut  réduction par utilisation de la règle 48 (OP_expression)
+
+
+état 108
+
+   49 OP_expression: LESS .
+
+    $défaut  réduction par utilisation de la règle 49 (OP_expression)
+
+
+état 109
+
+   51 OP_expression: GREATEREQUAL .
+
+    $défaut  réduction par utilisation de la règle 51 (OP_expression)
+
+
+état 110
+
+   52 OP_expression: LESSEQUAL .
+
+    $défaut  réduction par utilisation de la règle 52 (OP_expression)
+
+
+état 111
+
+   50 OP_expression: EQUAL .
+
+    $défaut  réduction par utilisation de la règle 50 (OP_expression)
+
+
+état 112
+
+   53 OP_expression: NOTEQUAL .
+
+    $défaut  réduction par utilisation de la règle 53 (OP_expression)
+
+
+état 113
+
+   46 Condition: expression OP_expression . expression
+   54 expression: . expression ADD expression
+   55           | . expression SUB expression
+   56           | . expression DIV expression
+   57           | . expression MUL expression
+   58           | . IDF
+   59           | . ENTIER
+   60           | . REEL
+   61           | . '(' expression ')'
+
+    ENTIER  décalage et aller à l'état 80
+    REEL    décalage et aller à l'état 81
+    IDF     décalage et aller à l'état 82
+    '('     décalage et aller à l'état 83
+
+    expression  aller à l'état 128
+
+
+état 114
+
+   36 Inst_WHILE: WHILE '(' Expression_Condition ')' . '{' Instructions '}'
+
+    '{'  décalage et aller à l'état 129
+
+
+état 115
+
+   21 literal: . ENTIER
+   22        | . REEL
+   39 Init_FOR: IDF ':' . literal
+
+    ENTIER  décalage et aller à l'état 43
+    REEL    décalage et aller à l'état 44
+
+    literal  aller à l'état 130
+
+
+état 116
+
+   37 Inst_FOR: FOR '(' Expression_FOR ')' . '{' Instructions '}'
+
+    '{'  décalage et aller à l'état 131
+
+
+état 117
+
+   21 literal: . ENTIER
+   22        | . REEL
+   38 Expression_FOR: Init_FOR ':' . Pas_FOR ':' Cond_arret
+   40 Pas_FOR: . literal
+
+    ENTIER  décalage et aller à l'état 43
+    REEL    décalage et aller à l'état 44
+
+    literal  aller à l'état 132
+    Pas_FOR  aller à l'état 133
+
+
+état 118
+
+   32 Inst_IF: B ELSE '{' Instructions . '}'
+
+    '}'  décalage et aller à l'état 134
+
+
+état 119
+
+   34 B: A '{' Instructions '}' .
+
+    $défaut  réduction par utilisation de la règle 34 (B)
+
+
+état 120
+
+   61 expression: '(' expression ')' .
+
+    $défaut  réduction par utilisation de la règle 61 (expression)
+
+
+état 121
+
+   54 expression: expression . ADD expression
+   55           | expression . SUB expression
+   55           | expression SUB expression .
+   56           | expression . DIV expression
+   57           | expression . MUL expression
+
+    DIV  décalage et aller à l'état 100
+    MUL  décalage et aller à l'état 101
+
+    $défaut  réduction par utilisation de la règle 55 (expression)
+
+
+état 122
+
+   54 expression: expression . ADD expression
+   54           | expression ADD expression .
+   55           | expression . SUB expression
+   56           | expression . DIV expression
+   57           | expression . MUL expression
+
+    DIV  décalage et aller à l'état 100
+    MUL  décalage et aller à l'état 101
+
+    $défaut  réduction par utilisation de la règle 54 (expression)
+
+
+état 123
+
+   54 expression: expression . ADD expression
+   55           | expression . SUB expression
+   56           | expression . DIV expression
+   56           | expression DIV expression .
+   57           | expression . MUL expression
+
+    $défaut  réduction par utilisation de la règle 56 (expression)
+
+
+état 124
+
+   54 expression: expression . ADD expression
+   55           | expression . SUB expression
+   56           | expression . DIV expression
+   57           | expression . MUL expression
+   57           | expression MUL expression .
+
+    $défaut  réduction par utilisation de la règle 57 (expression)
+
+
+état 125
+
+   31 Inst_AFF: IDF '[' ENTIER ']' AFF . expression
+   54 expression: . expression ADD expression
+   55           | . expression SUB expression
+   56           | . expression DIV expression
+   57           | . expression MUL expression
+   58           | . IDF
+   59           | . ENTIER
+   60           | . REEL
+   61           | . '(' expression ')'
+
+    ENTIER  décalage et aller à l'état 80
+    REEL    décalage et aller à l'état 81
+    IDF     décalage et aller à l'état 82
+    '('     décalage et aller à l'état 83
+
+    expression  aller à l'état 135
+
+
+état 126
+
+   43 Expression_Condition: Condition AND Expression_Condition .
+
+    $défaut  réduction par utilisation de la règle 43 (Expression_Condition)
+
+
+état 127
+
+   44 Expression_Condition: Condition OR Expression_Condition .
+
+    $défaut  réduction par utilisation de la règle 44 (Expression_Condition)
+
+
+état 128
+
+   46 Condition: expression OP_expression expression .
+   54 expression: expression . ADD expression
+   55           | expression . SUB expression
+   56           | expression . DIV expression
+   57           | expression . MUL expression
+
+    SUB  décalage et aller à l'état 98
+    ADD  décalage et aller à l'état 99
+    DIV  décalage et aller à l'état 100
+    MUL  décalage et aller à l'état 101
+
+    $défaut  réduction par utilisation de la règle 46 (Condition)
+
+
+état 129
+
+   23 Instructions: . Inst Instructions
+   24             | .
+   25 Inst: . Inst_AFF ';'
+   26     | . Inst_IF
+   27     | . Inst_WHILE
+   28     | . Inst_FOR
+   29     | . COMMENT
+   30 Inst_AFF: . IDF AFF expression
+   31         | . IDF '[' ENTIER ']' AFF expression
+   32 Inst_IF: . B ELSE '{' Instructions '}'
+   33        | . B
+   34 B: . A '{' Instructions '}'
+   35 A: . IF '(' Expression_Condition ')'
+   36 Inst_WHILE: . WHILE '(' Expression_Condition ')' '{' Instructions '}'
+   36           | WHILE '(' Expression_Condition ')' '{' . Instructions '}'
+   37 Inst_FOR: . FOR '(' Expression_FOR ')' '{' Instructions '}'
+
+    IDF      décalage et aller à l'état 55
+    IF       décalage et aller à l'état 56
+    WHILE    décalage et aller à l'état 57
+    FOR      décalage et aller à l'état 58
+    COMMENT  décalage et aller à l'état 59
+
+    $défaut  réduction par utilisation de la règle 24 (Instructions)
+
+    Instructions  aller à l'état 136
+    Inst          aller à l'état 61
+    Inst_AFF      aller à l'état 62
+    Inst_IF       aller à l'état 63
+    B             aller à l'état 64
+    A             aller à l'état 65
+    Inst_WHILE    aller à l'état 66
+    Inst_FOR      aller à l'état 67
+
+
+état 130
+
+   39 Init_FOR: IDF ':' literal .
+
+    $défaut  réduction par utilisation de la règle 39 (Init_FOR)
+
+
+état 131
+
+   23 Instructions: . Inst Instructions
+   24             | .
+   25 Inst: . Inst_AFF ';'
+   26     | . Inst_IF
+   27     | . Inst_WHILE
+   28     | . Inst_FOR
+   29     | . COMMENT
+   30 Inst_AFF: . IDF AFF expression
+   31         | . IDF '[' ENTIER ']' AFF expression
+   32 Inst_IF: . B ELSE '{' Instructions '}'
+   33        | . B
+   34 B: . A '{' Instructions '}'
+   35 A: . IF '(' Expression_Condition ')'
+   36 Inst_WHILE: . WHILE '(' Expression_Condition ')' '{' Instructions '}'
+   37 Inst_FOR: . FOR '(' Expression_FOR ')' '{' Instructions '}'
+   37         | FOR '(' Expression_FOR ')' '{' . Instructions '}'
+
+    IDF      décalage et aller à l'état 55
+    IF       décalage et aller à l'état 56
+    WHILE    décalage et aller à l'état 57
+    FOR      décalage et aller à l'état 58
+    COMMENT  décalage et aller à l'état 59
+
+    $défaut  réduction par utilisation de la règle 24 (Instructions)
+
+    Instructions  aller à l'état 137
+    Inst          aller à l'état 61
+    Inst_AFF      aller à l'état 62
+    Inst_IF       aller à l'état 63
+    B             aller à l'état 64
+    A             aller à l'état 65
+    Inst_WHILE    aller à l'état 66
+    Inst_FOR      aller à l'état 67
+
+
+état 132
+
+   40 Pas_FOR: literal .
+
+    $défaut  réduction par utilisation de la règle 40 (Pas_FOR)
+
+
+état 133
+
+   38 Expression_FOR: Init_FOR ':' Pas_FOR . ':' Cond_arret
+
+    ':'  décalage et aller à l'état 138
+
+
+état 134
+
+   32 Inst_IF: B ELSE '{' Instructions '}' .
+
+    $défaut  réduction par utilisation de la règle 32 (Inst_IF)
+
+
+état 135
+
+   31 Inst_AFF: IDF '[' ENTIER ']' AFF expression .
+   54 expression: expression . ADD expression
+   55           | expression . SUB expression
+   56           | expression . DIV expression
+   57           | expression . MUL expression
+
+    SUB  décalage et aller à l'état 98
+    ADD  décalage et aller à l'état 99
+    DIV  décalage et aller à l'état 100
+    MUL  décalage et aller à l'état 101
+
+    $défaut  réduction par utilisation de la règle 31 (Inst_AFF)
+
+
+état 136
+
+   36 Inst_WHILE: WHILE '(' Expression_Condition ')' '{' Instructions . '}'
+
+    '}'  décalage et aller à l'état 139
+
+
+état 137
+
+   37 Inst_FOR: FOR '(' Expression_FOR ')' '{' Instructions . '}'
+
+    '}'  décalage et aller à l'état 140
+
+
+état 138
+
+   21 literal: . ENTIER
+   22        | . REEL
+   38 Expression_FOR: Init_FOR ':' Pas_FOR ':' . Cond_arret
+   41 Cond_arret: . IDF
+   42           | . literal
+
+    ENTIER  décalage et aller à l'état 43
+    REEL    décalage et aller à l'état 44
+    IDF     décalage et aller à l'état 141
+
+    literal     aller à l'état 142
+    Cond_arret  aller à l'état 143
+
+
+état 139
+
+   36 Inst_WHILE: WHILE '(' Expression_Condition ')' '{' Instructions '}' .
+
+    $défaut  réduction par utilisation de la règle 36 (Inst_WHILE)
+
+
+état 140
+
+   37 Inst_FOR: FOR '(' Expression_FOR ')' '{' Instructions '}' .
+
+    $défaut  réduction par utilisation de la règle 37 (Inst_FOR)
+
+
+état 141
+
+   41 Cond_arret: IDF .
+
+    $défaut  réduction par utilisation de la règle 41 (Cond_arret)
+
+
+état 142
+
+   42 Cond_arret: literal .
+
+    $défaut  réduction par utilisation de la règle 42 (Cond_arret)
+
+
+état 143
+
+   38 Expression_FOR: Init_FOR ':' Pas_FOR ':' Cond_arret .
+
+    $défaut  réduction par utilisation de la règle 38 (Expression_FOR)

@@ -41,25 +41,14 @@ void divZero(int indice){
 
 void modifConstante(char * el){
     int k = recherche(el);
-    if( k != -1 && strcmp(TS[k].nature,"Constante")==0 ){
+    if( k != -1 && TS[k].nature == 1 ){
         yyerror(strdup("erreur semantique modification de constante"));
     }
 
 }
 
 void decTab (char* el){
-    if (recherche(el)==-1 && strcmp(natureIdf(el),"Tableau")==0){
+    if (recherche(el)==-1 && natureIdf(el)!=3){
         yyerror(strdup("erreur semantique IDF Tableau non declare"));
     }
-}
-
-
-int decStruct(char *el)
-{
-    if (recherche(el) == -1 && strcmp(natureIdf(el),"Structure")!=0)
-    {
-        return 0;
-    }
-    else
-        return 1;
 }

@@ -7,6 +7,8 @@
 #include "RS.c"
 #include "QUAD.h"
 #include "QUAD.c"
+#include "codeobjet.c"
+#include "codeobjet.h"
  
 int yylex();
 int yyerror(char *);
@@ -392,6 +394,8 @@ int main (){
 	afficherTS();
 	printf("\n------------------ LES QUADRUPLETS AVANT OPTIMISATION ----------------------\n");
 	afficherQuad();
+	printf("\n------------------ GENERATION DU CODE OBJET ----------------------\n");
+	assembler();
 
     fclose (yyin);
 }

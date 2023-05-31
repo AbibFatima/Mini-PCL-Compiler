@@ -20,8 +20,4 @@ void modifConstante(char *);
 //routine semantique de la non declaration de tableau
 void decTab (char* el);
 
-// routine semantique de la non declaration d'une structure
-int decStruct(char *el);
-
-
 #endif// RS_H

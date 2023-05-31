@@ -1,10 +1,10 @@
 %{
+    //Déclaration C (pré-code)
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
     #include "s.tab.h"
     #include "TS.h"
-    #include "TS.c"
     extern YYSTYPE yylval;
     int ligne=1,col=1;
 %}
@@ -68,7 +68,6 @@ commentaire "%%"[^"\n"]*"\n"?
 ","     {col+=yyleng; yylval.nom = strdup(yytext); return',';}
 ";"     {col+=yyleng; yylval.nom = strdup(yytext); return';';}
 ":"     {col+=yyleng; yylval.nom = strdup(yytext); return':';}
-"."     {col+=yyleng; yylval.nom = strdup(yytext); return'.';}
 
 {idf}       {
                 if(yyleng<=8){
@@ -83,6 +82,7 @@ commentaire "%%"[^"\n"]*"\n"?
     }
 {reel}      {
                 col+=yyleng;
+                GenerationTS (strdup(yytext), 2 , 0, 0, atof(yytext));
                 yylval.reel = atof(yytext); 
                 return(REEL);
             }
@@ -90,12 +90,13 @@ commentaire "%%"[^"\n"]*"\n"?
                 if(atoi(yytext)<=32767 && atoi(yytext)>=-32768)
                 {
                     col+=yyleng;
+                    GenerationTS(strdup(yytext), 1 ,0, 0 , atoi(yytext)); 
                     yylval.ent = atoi(yytext);
                     return(ENTIER);
                 }
                 else {
                     col+=yyleng;
-                    printf("Erreur Lexicale ligne %d colonne %d : Depacement de capacite\n",ligne,col);
+                    printf("Erreur Lexicale : Depacement de capacite\n");
                 }
             }
 {commentaire} {col+=yyleng; yylval.nom = strdup(yytext); return(COMMENT);}
