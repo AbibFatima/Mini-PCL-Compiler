@@ -164,8 +164,9 @@ Inst_AFF : 	IDF AFF expression {
 									modifConstante($1);
 									decTab($1);
 									if (typeIdf($1)!=$3.type) 
-										yyerror("erreur semantique incompatibilite des types affectation."); 
-									
+										{
+											if (typeIdf($1) != 2)  yyerror("erreur semantique incompatibilite des types affectation."); 
+										}				
 									quad (":=",$3.res,"",$1);
 								}
 			| IDF'[' ENTIER ']' AFF expression {
@@ -325,9 +326,14 @@ expression: expression ADD expression {
 											yyerror ("erreur semantique incompatibilite des types"); 
 										sprintf(tempC, "T%d",nTemp);
 										nTemp++;
+										
 										$$.res=strdup(tempC);	
 										tempC[0]='\0'; 
 										quad ("+",$1.res,$3.res,$$.res);
+										float resultat = $1.val + $3.val;
+										$$.type = $1.type;
+                                        $$.val = resultat;
+										//printf("Resultat de l'addition : %.2f\n", resultat);
 									}
 	| expression SUB expression { 
 									if ($1.type!=$3.type) 
@@ -337,9 +343,12 @@ expression: expression ADD expression {
 									$$.res=strdup(tempC);	
 									tempC[0]='\0'; 
 									quad ("-",$1.res,$3.res,$$.res);
-									
+									float resultat = $1.val - $3.val;
+									$$.type = $1.type;
+                                    $$.val = resultat;
+									//printf("Resultat de la soustraction : %.2f\n", resultat);
 								}	
-	| expression DIV expression { 
+	| expression DIV expression {   if ($3.val==0) {yyerror("erreur semantique division sur 0") ;}
 									if ($1.type!=$3.type) 
 										yyerror ("erreur semantique incompatibilite des types"); 
 									sprintf(tempC, "T%d",nTemp);
@@ -347,6 +356,10 @@ expression: expression ADD expression {
 									$$.res=strdup(tempC);	
 									tempC[0]='\0'; 
 									quad ("/",$1.res,$3.res,$$.res);
+									float resultat = $1.val / $3.val;
+									$$.type = $1.type;
+                                    $$.val = resultat;
+									//printf("Resultat de la division : %.2f\n", resultat);
 									
 								}
 	| expression MUL expression { 
@@ -357,6 +370,11 @@ expression: expression ADD expression {
 									$$.res=strdup(tempC);	
 									tempC[0]='\0'; 
 									quad ("*",$1.res,$3.res,$$.res);
+									float resultat = $1.val * $3.val;
+									$$.type = $1.type;
+                                    $$.val = resultat;
+									//printf("Resultat de la multiplication : %.2f\n", resultat);
+
 								}
 	| IDF { 
 			dec($1); 
@@ -393,13 +411,13 @@ int main (){
     yyparse();
 	
 	//printf("\n------------------ LA TABLE DES SYMBOLES ----------------------\n");
-	//afficherTS();
+	afficherTS();
 	printf("\n------------------ LES QUADRUPLETS AVANT OPTIMISATION ----------------------\n");
 	afficherQuad();
 	//optimiser les quadruplets
-	optimisation();
+	//optimisation();
 	printf("\n------------------LES QUADRUPLETS APRES OPTIMISATION----------------------\n");
-	afficherQuad();
+	//afficherQuad();
 	printf("\n------------------ GENERATION DU CODE OBJET ----------------------\n");
 	assembler();
 

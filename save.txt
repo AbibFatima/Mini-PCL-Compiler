@@ -105,3 +105,119 @@ condition: expression GREATER expression
 condition_exp: condition AND condition_exp 
 	| condition OR condition_exp 
 	| condition ;
+
+
+
+
+
+Program 
+{
+    VAR {
+        %%Declaration de variables
+        INTEGER sarra,maria,soumia,a,b,x,i,n;
+        FLOAT y;
+        INTEGER tableau[7];
+        STRUCT {
+            INTEGER matricul,
+            INTEGER moyenne,
+		    INTEGER Ab3 ,
+        } Etudiant;
+        STRUCT Etudiant Sarra,Fatima;
+        
+        CONST idf1 = 355;
+		CONST idf2 = 35.5;
+		CONST idf3 = (-355);
+		CONST idf4 = (+35.5);
+		CONST idf5 = (-35.5);
+	    CONST idf6 = 355 ;
+		CONST idf7 = 35.5 ;
+    }
+    CODE {
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %% Affecation 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %% Variable simple
+        a = b;
+        %% Expression Arithmetique
+        n = ( a / 2)  +  (b * 9) + 1 - 7;	
+        sarra = maria * a ;
+        Sarra.moyenne = 12;
+
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%Condition if 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %% Condition simple
+        IF (a == b){
+            a = a/2;
+        } ELSE {
+            b = b + 1;
+        }
+
+        %% Condition complexe
+		IF( a < 555 && (idf1 == idf2) && (idf4 > idf2) || !(b <= 0)  ){
+            n = 0;
+        } ELSE{
+            n = 1;
+        }
+		
+		%%IF imbriqué
+		IF( a < 555 && (idf1 == idf2) && (idf4 > idf2)|| !(b <= 0) ){
+            n = 0;
+        } ELSE{ IF( a < 555 ){
+                    b = 0;
+                } ELSE{ 
+                    n = 1;
+                }
+			}
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%Boucle for
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        FOR ( i : 0 : 5 : n )  {
+            x = 5;
+        }
+		
+        %%Boucle for imbriqué 
+		FOR( i : 33 : 2 : n )
+		{	FOR( j : 3 : n : i ){
+                a = b;
+            }
+		}
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%Boucle while
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%Condition simple
+        WHILE (y<x){ 
+            x = 5; 
+        }
+		
+		%%Condition complexe
+		WHILE( a < 555 && (idf1 == idf2) && (idf4 > idf2) || !(b <= 0)  )
+	    {	a = a + 2 ;
+			b = b + 2 ;
+		}
+	
+		%% WHILE imbriqué
+		WHILE( a < 555 && (idf1 == idf2) && (idf4 > idf2) || !(b <= 0) )
+		{	WHILE( n < 555 ){
+                a = a + 2 ; 
+            }
+		}
+
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%IMBRIQUATION DES INSTRUCTIONS :
+        %%WHILE & FOR & IF & EXPRESSION ARITHMETIQUE
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		WHILE( a < 555 && (idf1 == idf2) && (idf4 > idf2) || !(b <= 0)  )
+		{	IF(  ( a > 2) || !(b <= z)  ){
+                n = ( a / 2)  +  (b * 9) + 1 - 7;	
+            } ELSE{ 
+                    FOR ( i : 0 : 5 : n )  {
+                        x = 5;
+                    }
+			}
+		}	
+    }  
+}

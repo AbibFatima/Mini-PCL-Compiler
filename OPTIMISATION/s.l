@@ -7,6 +7,8 @@
     #include "TS.c"
     extern YYSTYPE yylval;
     int ligne=1,col=1;
+    char t [20] , val[20];
+    int i;		 int j =0;		int k;
 %}
 
 %option noyywrap
@@ -82,15 +84,51 @@ commentaire "%%"[^"\n"]*"\n"?
                 }
     }
 {reel}      {
-                col+=yyleng;
-                yylval.reel = atof(yytext); 
-                return(REEL);
+               col+=yyleng;
+               
+                    strcpy(val ,yytext);
+		          	if ( val[0] =='(' ) 
+			        {   	if ( val[1] =='-' ) 
+                           { for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+				            strcpy(val ,t);
+				            yylval.reel =-1 *atof(val);
+                           }
+			               else { if ( val[1] =='+' )
+					     	{   for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+							    strcpy(val ,t);
+							    yylval.reel =atof(val);
+					     	}
+                             
+                        
+                    }
+                    }
+                    else yylval.reel =atof(val);
+
+				 	 	
+                    return(REEL);
             }
+
 {entier}    {
-                if(atoi(yytext)<=32767 && atoi(yytext)>=-32768)
-                {
+                if(atoi(yytext)<=32767 && atoi(yytext)>=-32768){   
+                    sprintf(val,"%d",atoi(yytext));
+                    //recherche2(val,"INTEGER",yytext);
                     col+=yyleng;
-                    yylval.ent = atoi(yytext);
+                    strcpy(val ,yytext);
+		          	if ( val[0] =='(' ) 
+			        {   	if ( val[1] =='-' ) 
+                           { for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+				            strcpy(val ,t);
+				            yylval.ent =-1 *atoi(val);
+                           }
+			               else { if ( val[1] =='+' )
+					     	{   for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+							    strcpy(val ,t);
+							    yylval.ent =atoi(val);
+					     	}
+                           }
+                    }
+                    else {yylval.ent =atoi(val);}
+ 	 	
                     return(ENTIER);
                 }
                 else {

@@ -449,7 +449,9 @@ char *yytext;
     #include "TS.c"
     extern YYSTYPE yylval;
     int ligne=1,col=1;
-#line 453 "lex.yy.c"
+    char t [20] , val[20];
+    int i;		 int j =0;		int k;
+#line 455 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -600,9 +602,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 28 "s.l"
+#line 30 "s.l"
 
-#line 606 "lex.yy.c"
+#line 608 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -687,177 +689,177 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 29 "s.l"
+#line 31 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(VAR);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 30 "s.l"
+#line 32 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(CODE);}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 32 "s.l"
+#line 34 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(INTEGER);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 33 "s.l"
+#line 35 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(FLOAT);}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 35 "s.l"
+#line 37 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(CONST);}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 36 "s.l"
+#line 38 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(STRUCT);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 38 "s.l"
+#line 40 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(IF);}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 39 "s.l"
+#line 41 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(ELSE);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 40 "s.l"
+#line 42 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(FOR);}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 41 "s.l"
+#line 43 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(WHILE);}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 43 "s.l"
+#line 45 "s.l"
 {col+=yyleng; return(AFF);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 45 "s.l"
+#line 47 "s.l"
 {col+=yyleng; return('(');}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 46 "s.l"
+#line 48 "s.l"
 {col+=yyleng; return(')');}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 47 "s.l"
+#line 49 "s.l"
 {col+=yyleng; return('{');}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 48 "s.l"
+#line 50 "s.l"
 {col+=yyleng; return('}');}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 49 "s.l"
+#line 51 "s.l"
 {col+=yyleng; return('[');}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 50 "s.l"
+#line 52 "s.l"
 {col+=yyleng; return(']');}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 52 "s.l"
+#line 54 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(ADD);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 53 "s.l"
+#line 55 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(SUB);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 54 "s.l"
+#line 56 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(DIV);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 55 "s.l"
+#line 57 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(MUL);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 57 "s.l"
+#line 59 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(AND);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 58 "s.l"
+#line 60 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(OR);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 59 "s.l"
+#line 61 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(NOT);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 61 "s.l"
+#line 63 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(GREATER);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 62 "s.l"
+#line 64 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(LESS);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 63 "s.l"
+#line 65 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(GREATEREQUAL);}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 64 "s.l"
+#line 66 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(LESSEQUAL);}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 65 "s.l"
+#line 67 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(EQUAL);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 66 "s.l"
+#line 68 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(NOTEQUAL);}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 68 "s.l"
+#line 70 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return',';}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 69 "s.l"
+#line 71 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return';';}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 70 "s.l"
+#line 72 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return':';}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 71 "s.l"
+#line 73 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return'.';}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 73 "s.l"
+#line 75 "s.l"
 {
                 if(yyleng<=8){
                     col+=yyleng; 
@@ -872,21 +874,56 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 84 "s.l"
+#line 86 "s.l"
 {
-                col+=yyleng;
-                yylval.reel = atof(yytext); 
-                return(REEL);
+               col+=yyleng;
+               
+                    strcpy(val ,yytext);
+		          	if ( val[0] =='(' ) 
+			        {   	if ( val[1] =='-' ) 
+                           { for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+				            strcpy(val ,t);
+				            yylval.reel =-1 *atof(val);
+                           }
+			               else { if ( val[1] =='+' )
+					     	{   for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+							    strcpy(val ,t);
+							    yylval.reel =atof(val);
+					     	}
+                             
+                        
+                    }
+                    }
+                    else yylval.reel =atof(val);
+
+				 	 	
+                    return(REEL);
             }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 89 "s.l"
+#line 111 "s.l"
 {
-                if(atoi(yytext)<=32767 && atoi(yytext)>=-32768)
-                {
+                if(atoi(yytext)<=32767 && atoi(yytext)>=-32768){   
+                    sprintf(val,"%d",atoi(yytext));
+                    //recherche2(val,"INTEGER",yytext);
                     col+=yyleng;
-                    yylval.ent = atoi(yytext);
+                    strcpy(val ,yytext);
+		          	if ( val[0] =='(' ) 
+			        {   	if ( val[1] =='-' ) 
+                           { for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+				            strcpy(val ,t);
+				            yylval.ent =-1 *atoi(val);
+                           }
+			               else { if ( val[1] =='+' )
+					     	{   for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+							    strcpy(val ,t);
+							    yylval.ent =atoi(val);
+					     	}
+                           }
+                    }
+                    else {yylval.ent =atoi(val);}
+ 	 	
                     return(ENTIER);
                 }
                 else {
@@ -897,30 +934,30 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 101 "s.l"
+#line 139 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(COMMENT);}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 102 "s.l"
+#line 140 "s.l"
 {col+=yyleng;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 103 "s.l"
+#line 141 "s.l"
 {col=1; ligne+=yyleng;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 105 "s.l"
+#line 143 "s.l"
 {printf("erreur lexicale entite %s ligne %d colonne %d \n",yytext,ligne,col);}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 106 "s.l"
+#line 144 "s.l"
 ECHO;
 	YY_BREAK
-#line 924 "lex.yy.c"
+#line 961 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1806,5 +1843,5 @@ int main()
 	return 0;
 	}
 #endif
-#line 106 "s.l"
+#line 144 "s.l"
 
