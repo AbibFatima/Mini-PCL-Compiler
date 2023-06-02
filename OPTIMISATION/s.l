@@ -72,41 +72,38 @@ commentaire "%%"[^"\n"]*"\n"?
 ":"     {col+=yyleng; yylval.nom = strdup(yytext); return':';}
 "."     {col+=yyleng; yylval.nom = strdup(yytext); return'.';}
 
-{idf}       {
-                if(yyleng<=8){
-                    col+=yyleng; 
-                    yylval.nom = strdup(yytext); 
-                    return(IDF);
-                }
-                else {
-                    col+=yyleng;
-                    printf("Erreur Lexicale : Identificateur %s trop long\n",yytext);
-                }
-    }
-{reel}      {
-               col+=yyleng;
-               
-                    strcpy(val ,yytext);
-		          	if ( val[0] =='(' ) 
-			        {   	if ( val[1] =='-' ) 
-                           { for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
-				            strcpy(val ,t);
-				            yylval.reel =-1 *atof(val);
-                           }
-			               else { if ( val[1] =='+' )
-					     	{   for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
-							    strcpy(val ,t);
-							    yylval.reel =atof(val);
-					     	}
-                             
-                        
-                    }
-                    }
-                    else yylval.reel =atof(val);
-
-				 	 	
-                    return(REEL);
+{idf}   {   
+            if(yyleng<=8){
+                col+=yyleng;;
+                recherche2(yytext," "," "); 
+                yylval.nom = strdup(yytext); 
+                return(IDF);
+            } else {
+                col+=yyleng;
+                printf("Erreur Lexicale : Identificateur %s trop long\n",yytext);
             }
+        }
+
+{reel}  {
+            col+=yyleng;
+            strcpy(val ,yytext);
+            //recherche2(val,"FLOAT",yytext);
+		    if ( val[0] =='(' ) {
+                if ( val[1] =='-' ){ 
+                    for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+				    strcpy(val ,t);
+				    yylval.reel = -1*atof(val);
+                }
+			    else { 
+                    if ( val[1] =='+' ){   
+                        for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+                        strcpy(val ,t);
+                        yylval.reel =atof(val);
+                    }            
+                }
+            } else yylval.reel =atof(val);
+            return(REEL);
+        }
 
 {entier}    {
                 if(atoi(yytext)<=32767 && atoi(yytext)>=-32768){   
@@ -114,24 +111,21 @@ commentaire "%%"[^"\n"]*"\n"?
                     //recherche2(val,"INTEGER",yytext);
                     col+=yyleng;
                     strcpy(val ,yytext);
-		          	if ( val[0] =='(' ) 
-			        {   	if ( val[1] =='-' ) 
-                           { for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+		          	if ( val[0] =='(' ) {   	
+                        if ( val[1] =='-' ) { 
+                            for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
 				            strcpy(val ,t);
 				            yylval.ent =-1 *atoi(val);
-                           }
-			               else { if ( val[1] =='+' )
-					     	{   for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+                        } else { 
+                            if ( val[1] =='+' ){
+                                for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
 							    strcpy(val ,t);
 							    yylval.ent =atoi(val);
 					     	}
-                           }
-                    }
-                    else {yylval.ent =atoi(val);}
- 	 	
+                        }
+                    } else yylval.ent =atoi(val); 	 	
                     return(ENTIER);
-                }
-                else {
+                } else {
                     col+=yyleng;
                     printf("Erreur Lexicale ligne %d colonne %d : Depacement de capacite\n",ligne,col);
                 }

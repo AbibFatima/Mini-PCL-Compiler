@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<string.h>
-#include <stdlib.h>
+#include<stdlib.h>
 #include "QUAD.h"
 
 int indq=0;
@@ -8,7 +8,7 @@ int indq=0;
 //structure d'un quadruplet
 void quad (char* o,char*o1,char*o2,char*r)
 {
-    q[indq].opr=o; 	// Opération
+    q[indq].opr=o; 	// Operateur
     q[indq].op1=o1; // Opérande 1
     q[indq].op2=o2; // Opérande 2
     q[indq].res=r;  // Resultat
@@ -29,6 +29,7 @@ void afficherQuad()
 // convertir un entier en chaîne de caractères
 char* ToSTR(int i){
 	char s[15];
+	
 	sprintf(s,"%d",i);
 	return strdup(s);
 }

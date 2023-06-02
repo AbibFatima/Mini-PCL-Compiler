@@ -36,6 +36,7 @@ char val[12]="";
 
 /** IF ELSE BOUCLE WHILE FOR **/
 int fin_pos , else_pos, sauv_debut_while, sauv_deb_for;
+char sauv_pas_for[10];
 
 
 %}
@@ -66,6 +67,7 @@ int fin_pos , else_pos, sauv_debut_while, sauv_deb_for;
 s: 	IDF '{' VAR '{' DECLARATION '}' CODE '{' Instructions '}' '}' { printf ("\nprogramme syntaxiquement juste.\n");YYACCEPT ;}
 	;
 
+/******************** PARTIE DECLARATION *************************/
 DECLARATION : 	DECLARATION_Variables ';' DECLARATION 
 				| DECLARATION_Struct ';' DECLARATION 
 				| DECLARATION_Struct_Var ';' DECLARATION 
@@ -75,30 +77,16 @@ DECLARATION : 	DECLARATION_Variables ';' DECLARATION
 				|
 				;
 
-DECLARATION_Variables : TYPE liste_idf  
-						;
-
-liste_idf:	IDF ',' liste_idf { 
-								empiler_Str(&sauv_var,strdup($1));
-								if(doubleDec($1)==1){
-									yyerror("Erreur semantique Double declaration");
-								} else { inserer($1,sauvType,"Variable",size," "); }
-							}
-        	| IDF  { 	
-						empiler_Str(&sauv_var,strdup($1));
-						if(doubleDec($1)==1){
-								yyerror("Erreur semantique Double declaration");
-						} else { inserer($1,sauvType,"Variable",size," ");}
-					}
-        	;			
+		
 
 DECLARATION_Struct : STRUCT '{' declarStructFields '}' IDF { 
-																if(doubleDec($5)==1){
-																	yyerror("Double declaration");
-																} else {
-																	strcpy(sauvType," ");
-																	inserer($5,sauvType,"Structure",0," ");
-																}
+															if(doubleDec($5)==1){
+																yyerror("Erreur semantique Double declaration");
+															} else {
+																strcpy(sauvType," ");
+																inserer_type($5,sauvType);
+																inserer_nature($5,"Structure");
+															}
 					}
 					;
 
@@ -106,41 +94,76 @@ DECLARATION_Struct_Var : STRUCT IDF {strcpy(sauvType,$2); strcpy(sauvNature,"Str
 
 DECLARATION_Const : CONST IDF AFF ENTIER {
 											if(doubleDec($2)==1){
-												yyerror("Double declaration");
+												yyerror("Erreur semantique Double declaration");
 											} else { 	
+												inserer_nature($2,"Constante");
 												sprintf(sauvVal,"%d",$4);
-												inserer($2,"INTEGER","Constante",0,sauvVal);
+												inserer_valeur($2,sauvVal);
+												inserer_type($2,"INTEGER");
 											}
 					} 
 					| CONST IDF AFF REEL {
 											if(doubleDec($2)==1){
-												yyerror("Double declaration");
+												yyerror("Erreur semantique Double declaration");
 											} else { 	
+												inserer_nature($2,"Constante");
 												sprintf(sauvVal,"%f",$4);
-												inserer($2,"FLOAT","Constante",0, sauvVal);
+												inserer_valeur($2,sauvVal);
+												inserer_type($2,"FLOAT");
 											}
 					}
 					;
 
 DECLARATION_Tableau : 	TYPE IDF '[' ENTIER ']' {
 													if(doubleDec($2)==1){
-														yyerror("Double declaration");
+														yyerror("Erreur semantique Double declaration");
 													} else {
-														inserer ($2,sauvType,"Tableau",$4," ");
+														inserer_type($2,sauvType);
+														inserer_nature($2,"Tableau");
+														inserer_size($2,$4);
 														sauv_size = $4;
 													}
 					}
 					;
 
 
-declarStructFields : 	TYPE IDF ',' declarStructFields { 	if(doubleDec($2)==1){
-																	yyerror("Double declaration");
+declarStructFields : 	TYPE IDF ',' declarStructFields  { 	
+															if(doubleDec($2)==1){
+																	yyerror("Erreur semantique Double declaration");
 															} else {
-																	inserer($2,sauvType,"Variable",0," ");
+																	inserer_type($2,sauvType);
+																	inserer_nature($2,"Variable");
 															}
 														}
+					
+					
 					|
 					;
+
+DECLARATION_Variables : TYPE liste_idf  
+						;
+
+liste_idf:	IDF ',' liste_idf { 
+								empiler_Str(&sauv_var,strdup($1));
+								if(doubleDec($1)==1){
+									yyerror("Erreur semantique Double declaration");
+								} else { 
+							        inserer_nature($1,"Variable");
+									inserer_type($1,sauvType);      
+								}
+							}
+        	| IDF  { 	
+						empiler_Str(&sauv_var,strdup($1));
+						if(doubleDec($1)==1){
+								yyerror("Erreur semantique Double declaration");
+						} else { 
+						        inserer_nature($1,"Variable");
+								inserer_type($1,sauvType);
+						}
+					}
+        	;	
+
+
 
 TYPE : 	INTEGER { strcpy(sauvType,"INTEGER"); }
 		| FLOAT { strcpy(sauvType,"FLOAT"); }
@@ -162,14 +185,19 @@ Inst:   Inst_AFF ';'
 Inst_AFF : 	IDF AFF expression {
 									dec($1); 
 									modifConstante($1);
-									decTab($1);
+									
 									if (typeIdf($1)!=$3.type) 
 										{
 											if (typeIdf($1) != 2)  yyerror("erreur semantique incompatibilite des types affectation."); 
 										}				
+									
 									quad (":=",$3.res,"",$1);
+									
+									sprintf(sauvVal,"%f",$3.val);
+									inserer_valeur($1,sauvVal);
+
 								}
-			| IDF'[' ENTIER ']' AFF expression {
+			| IDF '[' ENTIER ']' AFF expression {
 									decTab($1);
 									modifConstante($1);
 									if (typeIdf($1)!=$6.type) 
@@ -183,12 +211,12 @@ Inst_AFF : 	IDF AFF expression {
 												dec($3);
 												modifConstante($3);	 
                                                 if (typeIdf($3)!=$5.type)  
-												yyerror("erreur semantique incompatibilite des types affectation.");
+													yyerror("erreur semantique incompatibilite des types affectation.");
 											}							 
 			}
 			;
 
-
+/********* Condition IF ************/
 Inst_IF	:	A '}' {	
 					indq--; 
 					fin_pos = depiler_qc(&pile1);
@@ -209,33 +237,35 @@ A	: B  Instructions {
 
 B	: IF '(' Condition ')' '{' {
 						empiler_qc(&pile1, indq); 
-						quad("BZ","",strdup($3.res),"");
+						quad("BZ","",strdup($3.res),"");   //BNZ ?????????
 					} 
 	;
 
-
-Inst_WHILE	:  DEBUT_WHILE Instructions '}'  {
+/********* BOUCLE WHILE ************/
+Inst_WHILE	:  DEBUT_WHILE  ')' '{' Instructions '}'  {
 									quad("BR",ToSTR(sauv_debut_while),"",""); 
 									q[sauv_debut_while].op1= ToSTR(indq); 
 			}
 			;
 
-DEBUT_WHILE : WHILE '(' Condition ')' '{' {
-									empiler_qc(&pile2,indq); 
-									sauv_debut_while= depiler_qc(&pile2);  
-									quad("BZ","",strdup($3.res),"")
+DEBUT_WHILE : WHILE '(' Condition { 
+							empiler_qc(&pile2,indq); 
+							sauv_debut_while= depiler_qc(&pile2); 	
+							quad("BZ","",strdup($3.res),"");
 			}
 			;
 
 
+/********* BOUCLE FOR ************/
 Inst_FOR 	: DEBUT_FOR  '{'  Instructions '}' { 
            					sauv_idf = depiler(&sauv_var); 
-							quad("+",strdup(sauv_idf),"1",strdup(sauv_idf)); 
+							quad("+",strdup(sauv_idf),strdup(sauv_pas_for),strdup(sauv_idf)); 
            					sauv_deb_for = depiler_qc(&pileFOR); 
 							quad("BR",ToSTR(sauv_deb_for),"",""); 
 							q[sauv_deb_for].op1= ToSTR(indq); 
          	}
 			;
+
 
 DEBUT_FOR 	: FOR '(' IDF ':' INIT ':' ENTIER ':' INIT ')'{ 
             				dec($3); 
@@ -243,6 +273,7 @@ DEBUT_FOR 	: FOR '(' IDF ':' INIT ':' ENTIER ':' INIT ')'{
 							empiler_qc(&pileFOR,indq); 
 							quad("BG","",$3,$9.res); 
 							empiler_Str(&sauv_var, $3);
+							sprintf(sauv_pas_for,"%d",$7);
         	}
 			;
 
@@ -250,7 +281,7 @@ INIT 	: ENTIER { $$.res = ToSTR($1); }
       	| IDF { $$.res = strdup($1);  dec($1); }
 		;
 
-
+/********* CONDITION ************/
 Condition: 	EXP_AR NOTEQUAL EXP_AR {
 								sprintf(tempC, "T%d",nTemp);
 								nTemp++;
@@ -315,7 +346,7 @@ Condition: 	EXP_AR NOTEQUAL EXP_AR {
 											createQuadLogic (3,$1.res,$3.res,$$.res);
 										}
 			| EXP_AR
-;
+			;
                    
 EXP_AR 	: expression { $$.res = $1.res; }
 		;    
@@ -384,11 +415,13 @@ expression: expression ADD expression {
 		}
 	| ENTIER { 
 				$$.type=1;
-				sprintf(val, "%d",$1); $$.res=strdup(val); $$.val=$1; 
+				sprintf(val, "%d",$1); $$.res=strdup(val); 
+				$$.val=$1; 
 			}
 	| REEL { 
 				$$.type=2; 
-				sprintf(val, "%f",$1); $$.res=strdup(val);  $$.val=$1;    
+				sprintf(val, "%f",$1); $$.res=strdup(val);  
+				$$.val=$1;    
 			}
 	|'(' expression ')' { 
 			$$.type=$2.type; 
@@ -411,13 +444,13 @@ int main (){
     yyparse();
 	
 	//printf("\n------------------ LA TABLE DES SYMBOLES ----------------------\n");
-	afficherTS();
+	//afficherTS();
 	printf("\n------------------ LES QUADRUPLETS AVANT OPTIMISATION ----------------------\n");
 	afficherQuad();
 	//optimiser les quadruplets
-	//optimisation();
+	optimisation();
 	printf("\n------------------LES QUADRUPLETS APRES OPTIMISATION----------------------\n");
-	//afficherQuad();
+	afficherQuad();
 	printf("\n------------------ GENERATION DU CODE OBJET ----------------------\n");
 	assembler();
 

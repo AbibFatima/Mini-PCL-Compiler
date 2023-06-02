@@ -860,73 +860,66 @@ YY_RULE_SETUP
 case 35:
 YY_RULE_SETUP
 #line 75 "s.l"
-{
-                if(yyleng<=8){
-                    col+=yyleng; 
-                    yylval.nom = strdup(yytext); 
-                    return(IDF);
-                }
-                else {
-                    col+=yyleng;
-                    printf("Erreur Lexicale : Identificateur %s trop long\n",yytext);
-                }
-    }
+{   
+            if(yyleng<=8){
+                col+=yyleng;;
+                recherche2(yytext," "," "); 
+                yylval.nom = strdup(yytext); 
+                return(IDF);
+            } else {
+                col+=yyleng;
+                printf("Erreur Lexicale : Identificateur %s trop long\n",yytext);
+            }
+        }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 86 "s.l"
+#line 87 "s.l"
 {
-               col+=yyleng;
-               
-                    strcpy(val ,yytext);
-		          	if ( val[0] =='(' ) 
-			        {   	if ( val[1] =='-' ) 
-                           { for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
-				            strcpy(val ,t);
-				            yylval.reel =-1 *atof(val);
-                           }
-			               else { if ( val[1] =='+' )
-					     	{   for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
-							    strcpy(val ,t);
-							    yylval.reel =atof(val);
-					     	}
-                             
-                        
-                    }
-                    }
-                    else yylval.reel =atof(val);
-
-				 	 	
-                    return(REEL);
-            }
+            col+=yyleng;
+            strcpy(val ,yytext);
+            //recherche2(val,"FLOAT",yytext);
+		    if ( val[0] =='(' ) {
+                if ( val[1] =='-' ){ 
+                    for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+				    strcpy(val ,t);
+				    yylval.reel = -1*atof(val);
+                }
+			    else { 
+                    if ( val[1] =='+' ){   
+                        for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+                        strcpy(val ,t);
+                        yylval.reel =atof(val);
+                    }            
+                }
+            } else yylval.reel =atof(val);
+            return(REEL);
+        }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 111 "s.l"
+#line 108 "s.l"
 {
                 if(atoi(yytext)<=32767 && atoi(yytext)>=-32768){   
                     sprintf(val,"%d",atoi(yytext));
                     //recherche2(val,"INTEGER",yytext);
                     col+=yyleng;
                     strcpy(val ,yytext);
-		          	if ( val[0] =='(' ) 
-			        {   	if ( val[1] =='-' ) 
-                           { for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+		          	if ( val[0] =='(' ) {   	
+                        if ( val[1] =='-' ) { 
+                            for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
 				            strcpy(val ,t);
 				            yylval.ent =-1 *atoi(val);
-                           }
-			               else { if ( val[1] =='+' )
-					     	{   for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
+                        } else { 
+                            if ( val[1] =='+' ){
+                                for (i=2 ; i<strlen(val)-1 ; i++) {	t[j] = val[i] ;	j++; }
 							    strcpy(val ,t);
 							    yylval.ent =atoi(val);
 					     	}
-                           }
-                    }
-                    else {yylval.ent =atoi(val);}
- 	 	
+                        }
+                    } else yylval.ent =atoi(val); 	 	
                     return(ENTIER);
-                }
-                else {
+                } else {
                     col+=yyleng;
                     printf("Erreur Lexicale ligne %d colonne %d : Depacement de capacite\n",ligne,col);
                 }
@@ -934,30 +927,30 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 139 "s.l"
+#line 133 "s.l"
 {col+=yyleng; yylval.nom = strdup(yytext); return(COMMENT);}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 140 "s.l"
+#line 134 "s.l"
 {col+=yyleng;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 141 "s.l"
+#line 135 "s.l"
 {col=1; ligne+=yyleng;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 143 "s.l"
+#line 137 "s.l"
 {printf("erreur lexicale entite %s ligne %d colonne %d \n",yytext,ligne,col);}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 144 "s.l"
+#line 138 "s.l"
 ECHO;
 	YY_BREAK
-#line 961 "lex.yy.c"
+#line 954 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1843,5 +1836,5 @@ int main()
 	return 0;
 	}
 #endif
-#line 144 "s.l"
+#line 138 "s.l"
 
