@@ -6,8 +6,8 @@
 #include "optimisation.h"
 
 
-void optimisation() {
-	
+void optimisation() 
+{	
     multiplication_X2();
     variable_non_utilisee();
     Propagation_de_copie();	
@@ -31,7 +31,6 @@ void optimisation() {
     }
 }
 
-
 // Optimisation : multiplication par 2
 void multiplication_X2()
 {
@@ -41,21 +40,17 @@ void multiplication_X2()
             if(q[i].op1[0]=='2'){
                 q[i].opr=strdup("+");
                 q[i].op1=strdup(q[i].op2);
-                //q[i].op2=strdup(q[i].op2);
             }else {
                 if (q[i].op2[0]=='2'){
                     q[i].opr=strdup("+");
-                    //q[i].op1=strdup(q[i].op1);
-                    //q[i].op2=strdup(q[i].op2);
                     q[i].op2=strdup(q[i].op1);
                 }
-            }
-                
+            }    
         }
     }
 }
 
-// Optimisation: elimination des variables non utilisee et afficher un warning
+// Optimisation: variables non utilisee (afficher un warning)
 void variable_non_utilisee()
 {
     int use=0;
@@ -71,45 +66,9 @@ void variable_non_utilisee()
         }
         if(use == 0){
             printf("Attention!!! : IDF ( %s ) declare et non utilise\n",TS[l].nom);
-        }   
-        //printf("haha");
+        } 
     }
-    
 }
-
-
-/*
-void variable_non_utilisee() 
-{
-    int i, j=0, k;
-	while(j<5)
-	{
-        for (i = 0; i < indq ; i++){
-            for (k = i + 1; k < indq; j++) {
-			while (strcmp(q[i].opr , q[k].opr)== 0)
-                if ( strcmp(q[i].opr , q[k].opr)== 0 && strcmp(q[i].op1 , q[k].op1)== 0 && strcmp(q[i].op2 , q[k].op2)== 0 ) 
-                {     
-                    strcpy( q[k].op1 , q[i].res) ;
-                    strcpy( q[k].op2 , "") ;
-                    strcpy( q[k].opr , q[i].res) ;
-                    //optimisation[opt]=i; opt++;
-                    supprimer_element(i);	
-                }   	
-            }
-	    }
-	    j++;	
-	}
-}
-
-
-void supprimer_element(int indice) {
-	int i;
-    for(i=indice; i<indq-1; i++) {
-        q[i] = q[i+1];
-    }
-    indq--;
-}
-*/
        
 // Optimisation : Propagation de copie
 void Propagation_de_copie( )

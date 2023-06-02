@@ -64,9 +64,9 @@ void createQuadCompare(int type, char *cond1, char *cond2, char *res){
 		break;
 	}
 	quad(TypeBR,ToSTR(indq+3),cond1,cond2);
-	quad("=","1","",res);
-	quad("BR",ToSTR(indq+2),"","");
 	quad("=","0","",res);
+	quad("BR",ToSTR(indq+2),"","");
+	quad("=","1","",res);
 }
 
 //creation d'un quadruplet logique
@@ -98,8 +98,6 @@ void createQuadLogic(int type, char *cond1, char *cond2, char *res){
 	}
 }  
 
-
-
 // Empiler une chaîne de caractères dans la pile
 void empiler_Str(pile **p,char *donne){
 
@@ -124,12 +122,12 @@ char* depiler(pile**p){
 	return res;
 }
 
-
 // empiler quadruplet
 void empiler_qc(pileQc **p, int pos){
-     pileQc *new;
-	 new=(pileQc*)malloc(sizeof(pileQc));
-	  new->donnee = pos;
+    
+	pileQc *new;
+	new=(pileQc*)malloc(sizeof(pileQc));
+	new->donnee = pos;
 
 	//mise à jour chainage
 	new->prc=*p;
@@ -138,12 +136,15 @@ void empiler_qc(pileQc **p, int pos){
 
 // depiler quadruplet
 int depiler_qc(pileQc **p){
+	
 	int position;
+	
 	pileQc *H;
 	H=*p;
 	position = H->donnee;
 	*p= H->prc;
 	free(H);
+	
 	return position;
 	
 }

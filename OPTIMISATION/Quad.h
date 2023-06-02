@@ -2,7 +2,7 @@
 #define QUAD_H
 
 // la taille de la table des quadruplets
-#define t 100
+#define t 200
 
 //la structure d'un element de la table 
 typedef struct 
@@ -26,14 +26,14 @@ typedef struct element_pile_Qc{
 	struct element_pile_Qc *prc;
 }pileQc;
 
-pileQc *pile1;
-pileQc *pile2;
+pileQc *pileIF;
+pileQc *pileWHILE;
 pileQc *pileFOR;
 
 //declaration de la table 
 quadruplet q[t];
 
-//signature des fonctions de qud.c
+//____signature des fonctions de qud.c
 
 //fonction d'insertion d'un nouveau quad
 void quad(char*,char*,char*,char*);
@@ -41,12 +41,20 @@ void quad(char*,char*,char*,char*);
 void afficherQuad();
 //fonction qui creer un quadruplet de comparaison
 void createQuadCompare(int type, char *cond1, char *cond2, char *res);
+//fonction qui creer un  quadruplet logique
+void createQuadLogic(int type, char *cond1, char *cond2, char *res);
 //fonction qui convertie un entier en chaîne de caractères
 char* ToSTR(int i);
-//
+//fonction qui empile les indices des boucles (IF, WHILE, FOR)
 void empiler_qc(pileQc **p, int pos);
-//
+//fonction qui depile les indices des boucles (IF, WHILE, FOR)
 int depiler_qc(pileQc **p);
+
+// Empiler une chaîne de caractères dans la pile
+void empiler_Str(pile **p,char *donne);
+//depiler un caractere
+char* depiler(pile**p);
+
 
 #endif //QUAD_H
 

@@ -27,23 +27,6 @@ void dec (char el[])
 
 }
 
-/*
-void divZero(int indice){
-    
-    /*if(strcmp(op,"/") == 0 & atoi(opd) == 0){
-        yyerror(strdup("erreur semantique division par zero \n"));
-    }
-    *//*
-    int i=0;
-    for(i; i<indice; i++){ 
-        if( strcmp(tab_expression[i],"/") == 0 && strcmp(tab_expression[i+1],"0")==0 ) {
-            yyerror(strdup("erreur semantique division par zero \n"));
-        }
-    }
-    
-}
-*/
-
 void modifConstante(char * el)
 {
     int k = recherche(el);

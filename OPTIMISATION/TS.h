@@ -6,10 +6,10 @@
 typedef struct 
 {
 	char nom[20];
-	char type[20]; 		//1: entier, 2: reel ,0: none
-	char nature[20]; 	//0: variable , 1: constante,2: structure ,3:tableau
+	char type[20]; 		// entier, reel , none
+	char nature[20]; 	// variable , constante, structure , tableau
 	int size ; 			// taille tab, sinon 0 
-	char val[20]; 		//valeur de idf ou constante 
+	char val[20]; 		// valeur de idf ou constante 
 } elem;
 				
 elem TS[taille];
@@ -37,11 +37,5 @@ int typeIdf(char []);
 char* natureIdf(char []);
 //fonction qui retourne la taille de la TS
 int tailleTS();
-
-//fonction qui sauvgarde la valeur
-//void SaveValue(char*, float );
-
-
-
 
 #endif //TS_H

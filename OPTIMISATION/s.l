@@ -8,7 +8,7 @@
     extern YYSTYPE yylval;
     int ligne=1,col=1;
     char t [20] , val[20];
-    int i;		 int j =0;		int k;
+    int i;		 int j = 0;
 %}
 
 %option noyywrap
@@ -42,14 +42,14 @@ commentaire "%%"[^"\n"]*"\n"?
 "FOR"       {col+=yyleng; yylval.nom = strdup(yytext); return(FOR);}
 "WHILE"     {col+=yyleng; yylval.nom = strdup(yytext); return(WHILE);}
 
-"="     {col+=yyleng; return(AFF);}
+"="     {col+=yyleng; yylval.nom = strdup(yytext); return(AFF);}
 
-"("     {col+=yyleng; return('(');}
-")"     {col+=yyleng; return(')');}
-"{"     {col+=yyleng; return('{');}
-"}"     {col+=yyleng; return('}');}
-"["     {col+=yyleng; return('[');}
-"]"     {col+=yyleng; return(']');}
+"("     {col+=yyleng; yylval.nom = strdup(yytext); return('(');}
+")"     {col+=yyleng; yylval.nom = strdup(yytext); return(')');}
+"{"     {col+=yyleng; yylval.nom = strdup(yytext); return('{');}
+"}"     {col+=yyleng; yylval.nom = strdup(yytext); return('}');}
+"["     {col+=yyleng; yylval.nom = strdup(yytext); return('[');}
+"]"     {col+=yyleng; yylval.nom = strdup(yytext); return(']');}
 
 "+"     {col+=yyleng; yylval.nom = strdup(yytext); return(ADD);}
 "-"     {col+=yyleng; yylval.nom = strdup(yytext); return(SUB);}

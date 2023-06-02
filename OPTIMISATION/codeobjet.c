@@ -4,9 +4,8 @@
 #include "Quad.h"
 #include "TS.h"
 
-/***********************************Generation du code machine************************************************/
-void assembler(){
-  
+void assembler()
+{  
 	int i, v = 0;
     char type[20]; 
 	char c[12] = "";
@@ -30,7 +29,7 @@ void assembler(){
 	for (i = 0; i < taille; i++){
 		p = TS[i];
 		strcpy(type,p.type);
-		if ( strcmp(type,"INTEGER")==0 ){
+		if ( strcmp(type,"INTEGER")==0 ){   // INTEGER
             if (p.size == 0)
                 fprintf(fp, "%s DW ?\n", p.nom); // cas variable simple
             else
@@ -41,7 +40,7 @@ void assembler(){
                 if (p.size == 0)
                     fprintf(fp, "%s DD ?\n", p.nom); // cas variable simple
                 else
-                    fprintf(fp, "%s DD dup(?)\n", p.nom); // cas tableau d'INTEGER
+                    fprintf(fp, "%s DD %d dup(?)\n", p.nom,p.size); // cas tableau d'FLOAT
             } else {
 
             }
@@ -287,8 +286,8 @@ void assembler(){
         //----  BG  ----
         if (strcmp(q[i].opr, "BG") == 0){
 
-        tab[in].ind = q[i].op1;
-        in = in + 1;
+            tab[in].ind = q[i].op1;
+            in = in + 1;
 
             if ((q[i].op2[0] == 'T') && (q[i].res[0] == 'T')){ // operande2 est un temporaire et resultat est un temporaire
                 fprintf(fp, "MOV SI,%c\n", q[i].op2[1]);
@@ -359,6 +358,7 @@ void assembler(){
                 }
             }
         }
+        
         //----  BE ----
         if (strcmp(q[i].opr, "BE") == 0){
 

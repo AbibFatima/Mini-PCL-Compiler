@@ -450,7 +450,7 @@ char *yytext;
     extern YYSTYPE yylval;
     int ligne=1,col=1;
     char t [20] , val[20];
-    int i;		 int j =0;		int k;
+    int i;		 int j = 0;
 #line 455 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
@@ -740,37 +740,37 @@ YY_RULE_SETUP
 case 11:
 YY_RULE_SETUP
 #line 45 "s.l"
-{col+=yyleng; return(AFF);}
+{col+=yyleng; yylval.nom = strdup(yytext); return(AFF);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 47 "s.l"
-{col+=yyleng; return('(');}
+{col+=yyleng; yylval.nom = strdup(yytext); return('(');}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 48 "s.l"
-{col+=yyleng; return(')');}
+{col+=yyleng; yylval.nom = strdup(yytext); return(')');}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 49 "s.l"
-{col+=yyleng; return('{');}
+{col+=yyleng; yylval.nom = strdup(yytext); return('{');}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 50 "s.l"
-{col+=yyleng; return('}');}
+{col+=yyleng; yylval.nom = strdup(yytext); return('}');}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 51 "s.l"
-{col+=yyleng; return('[');}
+{col+=yyleng; yylval.nom = strdup(yytext); return('[');}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 52 "s.l"
-{col+=yyleng; return(']');}
+{col+=yyleng; yylval.nom = strdup(yytext); return(']');}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP

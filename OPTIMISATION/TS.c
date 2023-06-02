@@ -71,7 +71,6 @@ void inserer_size(char el[], int size)
 void afficherTS ()
 {
 	int i=0; 
-	printf("\n/***************Table des symboles *************/\n");
     printf("______________________________________________________________________________________________\n");
     printf("|\t Nom \t|\t Type \t|\t Nature \t|\t Taille  \t|\t Valeur  \t|\n");
     printf("______________________________________________________________________________________________\n");
@@ -101,27 +100,3 @@ int tailleTS(){
 	return indexTS;
 }
 
-
-/*
-double getvaleur(char* nom) {
-    int i = recherche(nom);
-    if (i == -1) {
-        printf("Erreur : la variable %s n'a pas été déclarée\n", nom);
-        exit(1);
-    }
-    return TS[i].valeur;
-}
-
-
-*/
-/*
-void SaveValue(char entite[], float val)
-{
-	int position;
-	position =recherche (entite);
-	if (position != -1) 
-	{
-		TS[position].val=val;
-	}
-}
-*/
